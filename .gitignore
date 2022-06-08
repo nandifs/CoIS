@@ -125,3 +125,9 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+# CoIS
+system/
+public/AdminLTE-3.1.0/
+public/uploads/SATPAM/
+public/uploads/SATPAM/
+public/uploads/OPHARDUNG/
