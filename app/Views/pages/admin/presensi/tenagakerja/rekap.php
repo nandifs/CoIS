@@ -1,0 +1,193 @@
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-outline card-primary mt-2">
+                        <div class="card-body pb-0">
+                            <?= form_open_multipart('/presensitenagakerja', ['id' => 'frm-refresh', 'class' => 'form-horizontal']); ?>
+                            <?= csrf_field(); ?>
+                            <div class="form-group row">
+                                <label for="input1" class="col-sm-2 col-form-label">Data Mitra Kerja</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control select2" id="dt-akses" name='dtakses' style="width: 100%;">
+                                        <?php
+                                        if (isset($selDtAkses)) {
+                                            foreach ($dtMitraKerja as $mitra) :
+                                                $space = "";
+                                                if ($mitra['kelas'] == 2) {
+                                                    $space = "&nbsp;&nbsp;&nbsp;&nbsp;|&rarr; ";
+                                                } else if ($mitra['kelas'] == 3) {
+                                                    $space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&rarr; ";
+                                                } ?>
+                                                <option value=<?= $mitra['id']; ?> <?= ($mitra['id'] == $selDtAkses) ? "selected" : ""; ?>><?= $space . $mitra['singkatan']; ?></option>
+                                        <?php endforeach;
+                                        } ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <select class="form-control" id="periode" name='periode'>
+                                        <?php
+                                        $periodeLaporan = ambil_bulan_setahun_kebelakang();
+                                        $selected = "selected";
+                                        foreach ($periodeLaporan as $value) {
+                                            echo "<option value='$value' " . (($value == $selPeriode) ? 'selected' : '') . "> " . ambil_bulan_tahun($value) . "</option>";
+                                            $selected = "";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="btn-group">
+                                                <button type="submit" class="btn btn-info" name="cmdaksi" value="rekapitulasi">Tampilkan</button>
+                                                <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <button type="submit" class="dropdown-item" name="cmdaksi" value="detail">Detail</button>
+                                                    <button type="submit" class="dropdown-item" name="cmdaksi" value="rekapitulasi">Rekapitulasi</button>
+                                                    <div class="dropdown-divider"></div>
+                                                    <button type="submit" class="dropdown-item" name="cmdaksi" value="export_presensi_to_xls">Ekspor Ke Excel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?= form_close() ?>
+                            <?= view('templates/notification'); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3><?= $dtRekapPresensi['persentaseKehadiran']; ?><sup style="font-size: 20px">%</sup></h3>
+                            <p>Kehadiran</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3><?= $dtRekapPresensi['jmlTidakHadir']; ?><sup style="font-size: 20px">%</sup></h3>
+                            <p>Izin Sakit/Cuti/Tidak Masuk</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-ios-people"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3><?= $dtRekapPresensi['jmlTanpaKeterangan']; ?><sup style="font-size: 20px">%</sup></h3>
+
+                            <p>Alpha/Tanpa Kabar</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-ios-people"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3><?= $dtRekapPresensi['jmlHadirSaatIni']; ?> <sup style="font-size: 20px">Petugas</sup></h3>
+                            <p>Bertugas Saat Ini</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-ios-people"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">DAFTAR <?= strtoupper($title); ?></h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="def-table-1" class="table table-bordered" style="font-size: 1em;">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" style="text-align:center; vertical-align:middle;">No</th>
+                                        <th rowspan="2" style="text-align:center; vertical-align:middle;">NIP</th>
+                                        <th rowspan="2" style="text-align:center; vertical-align:middle;">Nama Tenagakerja</th>
+                                        <th rowspan="2" style="text-align:center; vertical-align:middle;">Unit Kerja</th>
+                                        <th rowspan="2" style="text-align:center; vertical-align:middle;">Penempatan</th>
+                                        <th colspan="5" style="text-align:center;">Jumlah</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Kehadiran</th>
+                                        <th>Sakit</th>
+                                        <th>Cuti</th>
+                                        <th>Ijin</th>
+                                        <th style="text-align:center;">Tanpa Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $no = 1;
+                                    if (isset($dtPresensi)) {
+                                        foreach ($dtPresensi as $row) {
+                                            $rowId = $row['id'];
+                                            $jml_presensi = ($row['jml_kehadiran'] + $row['jml_sakit'] + $row['jml_cuti'] + $row['jml_ijin']);
+                                            $jml_tnp_ket = 0;
+                                            if ($jml_tnp_ket <= $jml_presensi) {
+                                                $jml_tnp_ket = $jmlHariKerja - $jml_presensi;
+                                            }
+                                    ?>
+                                            <tr>
+                                                <td><?= $no; ?>.</td>
+                                                <td><?= $row['nip']; ?></td>
+                                                <td><?= $row['petugas']; ?></td>
+                                                <td><?= $row['unitkerja']; ?></td>
+                                                <td><?= $row['penempatan']; ?></td>
+                                                <td style="text-align:center;"><?= $row['jml_kehadiran']; ?></td>
+                                                <td style="text-align:center;"><?= $row['jml_sakit']; ?></td>
+                                                <td style="text-align:center;"><?= $row['jml_cuti']; ?></td>
+                                                <td style="text-align:center;"><?= $row['jml_ijin']; ?></td>
+                                                <td style="text-align:center;"><?= $jml_tnp_ket; ?></td>
+                                            </tr>
+                                    <?php
+                                            $no++;
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->

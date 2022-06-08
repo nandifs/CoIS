@@ -1,0 +1,4 @@
+.panel-body .btn:not(.btn-block) {
+  width: 160px;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,37 @@
+.login-background {
+  background: url(/app/img/bg.png);
+}
+
+.bg-gradient {
+  background: #333; /* For browsers that do not support gradients */
+  background: -webkit-radial-gradient(circle, #333, #d2d6de, #333); /* Safari */
+  background: -o-radial-gradient(
+    circle,
+    #333,
+    #d2d6de,
+    #333
+  ); /* Opera 11.6 to 12.0 */
+  background: -moz-radial-gradient(
+    circle,
+    #333,
+    #d2d6de,
+    #333
+  ); /* Firefox 3.6 to 15 */
+  background: radial-gradient(circle, #333, #d2d6de, #333);
+}
+
+.tabel-img {
+  width: 100px;
+  height: 80px;
+}
+
+.th-nowarp{
+  overflow: auto;
+}
+.th-nowarp>table>thead>tr>th{
+  white-space: nowrap;
+}
+
+.th-nowarp>table>tbody>tr>td{
+  white-space: nowrap;
+}
