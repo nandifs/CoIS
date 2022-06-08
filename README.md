@@ -1,2 +1,3 @@
 # CoIS
-Aplikasi Perusaaan Terintegrasi
+
+Corporate Integrited System
