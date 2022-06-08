@@ -74,7 +74,7 @@
                                     $no = 1;
                                     foreach ($dtKontrak as $row) {
                                         $data_id = $row['id'];
-                                        $jns_kontrak = "SPK";
+                                        $jns_kontrak = $row['jenis_kontrak'];
 
                                         $status_import = $row["status_import"];
                                         if (strtoupper($status_import) == "ON VALIDATION") {
@@ -87,14 +87,14 @@
                                         if (strtoupper($validasi) == "UPDATE DATA") {
                                             $validasi = "<span style='color:#ffc107;'> $validasi </span>";
                                         } else {
-                                            $validasi = "<span style='color:green; font-weight:bold;'> $validasi </span>";
+                                            $validasi = "<span style='color:#0275d8 ; font-weight:bold;'> $validasi </span>";
                                         }
 
                                         $status_kontrak = $row["status_kontrak"];
                                         if ($row["status_id"] == "2") {
                                             $status_kontrak = "<span style='color:red; font-weight:bold;'> $status_kontrak </span>";
                                         } else {
-                                            $status_kontrak = "<span style='color:green; font-weight:bold;'> $status_kontrak </span>";
+                                            $status_kontrak = "<span style='color:#5cb85c; font-weight:bold;'> $status_kontrak </span>";
                                         }
 
                                 ?>

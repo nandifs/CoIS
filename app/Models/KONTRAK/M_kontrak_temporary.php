@@ -18,7 +18,7 @@ class M_kontrak_temporary extends Model
         'tanggal_mulai', 'tanggal_akhir',
         'status_id', 'sub_kontrak',
         'no_io', 'nilai_bulan_ppn', 'nilai_total_ppn', 'jumlah_tad', 'keterangan',
-        'update_tanggal', 'update_oleh'
+        'update_oleh'
     ];
 
     public function getKontrakTemp($id = null)

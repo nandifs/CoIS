@@ -204,14 +204,16 @@ class Kontrak extends BaseController
 
             $data = $spreadsheet->getActiveSheet()->toArray();
 
+            //Save to temporary table
             $kontrakModel = new M_kontrak_temporary();
+
             $batchData = array();
             foreach ($data as $idx => $row) {
                 //Cek kolom terakhir file import
                 //Jika panjang kolom tidak sesuai berarti salah file import
                 if ($row_number == 1) {
                     $cek_cols = count($row);
-                    if ($cek_cols != 16) {
+                    if ($cek_cols != 20) {
                         $stat_import = "GAGAL IMPORT KONTRAK: Kolom file import tidak sesuai. Proses import Kontrak dibatalkan.";
                         break;
                     }
@@ -228,6 +230,7 @@ class Kontrak extends BaseController
 
                 // get data kontrak from excel
                 $sts_kontrak = $this->dbHelperKontrak->getStatusKontrakIdByNama(trim($row[1]));
+                $jenis_kontrak = trim($row[2]);
                 $no_io = trim($row[3]);
                 $no_kontrak = trim($row[4]);
                 $unitkerja = $this->dbHelperKontrak->getUnitkerjaIdByNama(trim($row[5]));
@@ -265,26 +268,27 @@ class Kontrak extends BaseController
                 }
 
                 if (is_null($unitkerja)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Unit Kerja '" . $row[4] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
+                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Unit Kerja '" . $unitkerja . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
                     break;
                 }
 
                 if (is_null($customer)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Customer '" . $row[5] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
+                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Customer '" . $customer . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
                     break;
                 }
 
                 if (is_null($jns_pekerjaan)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Jenis pekerjaan '" . $row[7] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
+                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Jenis pekerjaan '" . $jns_pekerjaan . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
                     break;
                 }
 
                 if (is_null($sub_jns_pekerjaan)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Sub Jenis pekerjaan '" . $row[8] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
+                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Sub Jenis pekerjaan '" . $sub_jns_pekerjaan . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
                     break;
                 }
 
                 $imp_data = [
+                    "jenis_kontrak" => $jenis_kontrak,
                     "tgl_import" => $tgl_import,
                     "validasi" => $validasi,
                     "status_import" => "On Validation",
@@ -304,7 +308,6 @@ class Kontrak extends BaseController
                     "jumlah_tad" => $jml_tad,
                     "keterangan" => $keterangan,
                     "status_id" => $sts_kontrak->id,
-                    "update_tanggal" => $tgl_update,
                     "update_oleh" => $user_id
                 ];
 
@@ -343,7 +346,6 @@ class Kontrak extends BaseController
     public function proses_import_xlsx()
     {
         $user_id = $this->user_id;
-        $tgl_update = date('Y-m-d H:i:s');
 
         $batchImportData = array();
         $batchUpdateData = array();
@@ -376,7 +378,6 @@ class Kontrak extends BaseController
                     "jumlah_tad" => $rowdata['jumlah_tad'],
                     "keterangan" => $rowdata['keterangan'],
                     "status_id" => $rowdata['status_id'],
-                    "update_tanggal" => $tgl_update,
                     "update_oleh" => $user_id
                 ];
 
@@ -400,7 +401,6 @@ class Kontrak extends BaseController
                     "jumlah_tad" => $rowdata['jumlah_tad'],
                     "keterangan" => $rowdata['keterangan'],
                     "status_id" => $rowdata['status_id'],
-                    "update_tanggal" => $tgl_update,
                     "update_oleh" => $user_id
                 ];
 
