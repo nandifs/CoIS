@@ -213,7 +213,7 @@ class Kontrak extends BaseController
                 //Jika panjang kolom tidak sesuai berarti salah file import
                 if ($row_number == 1) {
                     $cek_cols = count($row);
-                    if ($cek_cols != 20) {
+                    if ($cek_cols != 21) {
                         $stat_import = "GAGAL IMPORT KONTRAK: Kolom file import tidak sesuai. Proses import Kontrak dibatalkan.";
                         break;
                     }
@@ -233,24 +233,25 @@ class Kontrak extends BaseController
                 $jenis_kontrak = trim($row[2]);
                 $no_io = trim($row[3]);
                 $no_kontrak = trim($row[4]);
-                $unitkerja = $this->dbHelperKontrak->getUnitkerjaIdByNama(trim($row[5]));
-                $customer = $this->dbHelperKontrak->getCustomerIdByNama(trim($row[6]));
-                $uraian_pekerjaan = trim($row[7]);
-                $jns_pekerjaan = $this->dbHelperKontrak->getJenisPekerjaanIdByNama(trim($row[8]));
-                $sub_jns_pekerjaan = $this->dbHelperKontrak->getSubJenisPekerjaanByNama(trim($row[9]));
-                $tgl_mulai = $row[10];
-                $tgl_akhir = $row[11];
+                $tgl_kontrak = trim($row[5]);
+                $unitkerja = $this->dbHelperKontrak->getUnitkerjaIdByNama(trim($row[6]));
+                $customer = $this->dbHelperKontrak->getCustomerIdByNama(trim($row[7]));
+                $uraian_pekerjaan = trim($row[8]);
+                $jns_pekerjaan = $this->dbHelperKontrak->getJenisPekerjaanIdByNama(trim($row[9]));
+                $sub_jns_pekerjaan = $this->dbHelperKontrak->getSubJenisPekerjaanByNama(trim($row[10]));
+                $tgl_mulai = $row[11];
+                $tgl_akhir = $row[12];
 
-                $nil_kontrak_perbln_ppn = trim($row[12]);
+                $nil_kontrak_perbln_ppn = trim($row[13]);
                 $nil_kontrak_perbln_ppn = str_replace(',', '', $nil_kontrak_perbln_ppn);
                 $nil_kontrak_perbln_ppn = str_replace('.', ',', $nil_kontrak_perbln_ppn);
 
-                $nil_kontrak_total_ppn = trim($row[13]);
+                $nil_kontrak_total_ppn = trim($row[14]);
                 $nil_kontrak_total_ppn = str_replace(',', '', $nil_kontrak_total_ppn);
                 $nil_kontrak_total_ppn = str_replace('.', ',', $nil_kontrak_total_ppn);
 
-                $jml_tad =  trim($row[14]);
-                $keterangan =  trim($row[15]);
+                $jml_tad =  trim($row[15]);
+                $keterangan =  trim($row[16]);
 
                 $cekKontrakByNoSPK = $this->dbHelperKontrak->getKontrakIdByNoP1($no_kontrak);
 
@@ -297,6 +298,7 @@ class Kontrak extends BaseController
                     "customer_id" => $customer->id,
                     "no_io" => $no_io,
                     "no_pks_p1" => $no_kontrak,
+                    "tanggal_kontrak" => date('Y-m-d', strtotime($tgl_kontrak)),
                     "uraian_pekerjaan" => $uraian_pekerjaan,
                     "kategori_pekerjaan_id" => $jns_pekerjaan->kategori_id,
                     "jenis_pekerjaan_id" => $jns_pekerjaan->id,
@@ -361,51 +363,96 @@ class Kontrak extends BaseController
 
         foreach ($dtKontrak as $rowdata) {
             $validasi = $rowdata['validasi'];
-            if (strtoupper($validasi) == 'IMPORT DATA') {
-                $imp_data = [
-                    "perusahaan_id" => $rowdata['perusahaan_id'],
-                    "customer_id" => $rowdata['customer_id'],
-                    "no_io" => $rowdata['no_io'],
-                    "no_pks_p1" => $rowdata['no_pks_p1'],
-                    "uraian_pekerjaan" => $rowdata['uraian_pekerjaan'],
-                    "kategori_pekerjaan_id" => $rowdata['kategori_pekerjaan_id'],
-                    "jenis_pekerjaan_id" => $rowdata['jenis_pekerjaan_id'],
-                    "sub_jenis_pekerjaan_id" => $rowdata['sub_jenis_pekerjaan_id'],
-                    "tanggal_mulai" => $rowdata['tanggal_mulai'],
-                    "tanggal_akhir" => $rowdata['tanggal_akhir'],
-                    "nilai_bulan_ppn" => $rowdata['nilai_bulan_ppn'],
-                    "nilai_total_ppn" => $rowdata['nilai_total_ppn'],
-                    "jumlah_tad" => $rowdata['jumlah_tad'],
-                    "keterangan" => $rowdata['keterangan'],
-                    "status_id" => $rowdata['status_id'],
-                    "update_oleh" => $user_id
-                ];
+            $jenis_kontrak = $rowdata['jenis_kontrak'];
 
-                // Save to batchdata
-                $batchImportData[] = $imp_data;
-            } else if (strtoupper($validasi) == 'UPDATE DATA') {
-                $upd_data = [
-                    "id" => $rowdata['kontrak_id'],
-                    "perusahaan_id" => $rowdata['perusahaan_id'],
-                    "customer_id" => $rowdata['customer_id'],
-                    "no_io" => $rowdata['no_io'],
-                    "no_pks_p1" => $rowdata['no_pks_p1'],
-                    "uraian_pekerjaan" => $rowdata['uraian_pekerjaan'],
-                    "kategori_pekerjaan_id" => $rowdata['kategori_pekerjaan_id'],
-                    "jenis_pekerjaan_id" => $rowdata['jenis_pekerjaan_id'],
-                    "sub_jenis_pekerjaan_id" => $rowdata['sub_jenis_pekerjaan_id'],
-                    "tanggal_mulai" => $rowdata['tanggal_mulai'],
-                    "tanggal_akhir" => $rowdata['tanggal_akhir'],
-                    "nilai_bulan_ppn" => $rowdata['nilai_bulan_ppn'],
-                    "nilai_total_ppn" => $rowdata['nilai_total_ppn'],
-                    "jumlah_tad" => $rowdata['jumlah_tad'],
-                    "keterangan" => $rowdata['keterangan'],
-                    "status_id" => $rowdata['status_id'],
-                    "update_oleh" => $user_id
-                ];
+            if ($jenis_kontrak == "SPK") {
+                if (strtoupper($validasi) == 'IMPORT DATA') {
+                    $imp_data = [
+                        "perusahaan_id" => $rowdata['perusahaan_id'],
+                        "customer_id" => $rowdata['customer_id'],
+                        "no_io" => $rowdata['no_io'],
+                        "no_pks_p1" => $rowdata['no_pks_p1'],
+                        "tanggal_kontrak" => $rowdata['tanggal_kontrak'],
+                        "uraian_pekerjaan" => $rowdata['uraian_pekerjaan'],
+                        "kategori_pekerjaan_id" => $rowdata['kategori_pekerjaan_id'],
+                        "jenis_pekerjaan_id" => $rowdata['jenis_pekerjaan_id'],
+                        "sub_jenis_pekerjaan_id" => $rowdata['sub_jenis_pekerjaan_id'],
+                        "tanggal_mulai" => $rowdata['tanggal_mulai'],
+                        "tanggal_akhir" => $rowdata['tanggal_akhir'],
+                        "nilai_bulan_ppn" => $rowdata['nilai_bulan_ppn'],
+                        "nilai_total_ppn" => $rowdata['nilai_total_ppn'],
+                        "jumlah_tad" => $rowdata['jumlah_tad'],
+                        "keterangan" => $rowdata['keterangan'],
+                        "status_id" => $rowdata['status_id'],
+                        "update_oleh" => $user_id
+                    ];
 
-                // Save to batchdata
-                $batchUpdateData[] = $upd_data;
+                    // Save to batchdata
+                    $batchImportData[] = $imp_data;
+                } else if (strtoupper($validasi) == 'UPDATE DATA') {
+                    $upd_data = [
+                        "id" => $rowdata['kontrak_id'],
+                        "perusahaan_id" => $rowdata['perusahaan_id'],
+                        "customer_id" => $rowdata['customer_id'],
+                        "no_io" => $rowdata['no_io'],
+                        "no_pks_p1" => $rowdata['no_pks_p1'],
+                        "tanggal_kontrak" => $rowdata['tanggal_kontrak'],
+                        "uraian_pekerjaan" => $rowdata['uraian_pekerjaan'],
+                        "kategori_pekerjaan_id" => $rowdata['kategori_pekerjaan_id'],
+                        "jenis_pekerjaan_id" => $rowdata['jenis_pekerjaan_id'],
+                        "sub_jenis_pekerjaan_id" => $rowdata['sub_jenis_pekerjaan_id'],
+                        "tanggal_mulai" => $rowdata['tanggal_mulai'],
+                        "tanggal_akhir" => $rowdata['tanggal_akhir'],
+                        "nilai_bulan_ppn" => $rowdata['nilai_bulan_ppn'],
+                        "nilai_total_ppn" => $rowdata['nilai_total_ppn'],
+                        "jumlah_tad" => $rowdata['jumlah_tad'],
+                        "keterangan" => $rowdata['keterangan'],
+                        "status_id" => $rowdata['status_id'],
+                        "update_oleh" => $user_id
+                    ];
+
+                    // Save to batchdata
+                    $batchUpdateData[] = $upd_data;
+                }
+            } else if ($jenis_kontrak == "AMD") {
+                if (strtoupper($validasi) == 'IMPORT DATA') {
+                    $imp_data = [
+                        "kontrak_id" => $rowdata['no_pks_p1'],
+                        "no_amendemen" => $rowdata['uraian_pekerjaan'],
+                        "tanggal_amendemen" => $rowdata['tanggal_amendemen'],
+                        "uraian" => $rowdata['kategori_pekerjaan_id'],
+                        "nilai_bulan_ppn" => $rowdata['nilai_bulan_ppn'],
+                        "nilai_total_ppn" => $rowdata['nilai_total_ppn'],
+                        "tanggal_mulai" => $rowdata['tanggal_mulai'],
+                        "tanggal_akhir" => $rowdata['tanggal_akhir'],
+                        "jumlah_tad" => $rowdata['jumlah_tad'],
+                        "keterangan" => $rowdata['keterangan'],
+                        "status_id" => $rowdata['status_id'],
+                        "update_oleh" => $user_id
+                    ];
+
+                    // Save to batchdata
+                    $batchImportData[] = $imp_data;
+                } else if (strtoupper($validasi) == 'UPDATE DATA') {
+                    $upd_data = [
+                        "id" => $rowdata['kontrak_id'],
+                        "kontrak_id" => $rowdata['kontrak_induk_id'],
+                        "no_amendemen" => $rowdata['uraian_pekerjaan'],
+                        "tanggal_amendemen" => $rowdata['tanggal_amendemen'],
+                        "uraian" => $rowdata['kategori_pekerjaan_id'],
+                        "nilai_bulan_ppn" => $rowdata['nilai_bulan_ppn'],
+                        "nilai_total_ppn" => $rowdata['nilai_total_ppn'],
+                        "tanggal_mulai" => $rowdata['tanggal_mulai'],
+                        "tanggal_akhir" => $rowdata['tanggal_akhir'],
+                        "jumlah_tad" => $rowdata['jumlah_tad'],
+                        "keterangan" => $rowdata['keterangan'],
+                        "status_id" => $rowdata['status_id'],
+                        "update_oleh" => $user_id
+                    ];
+
+                    // Save to batchdata
+                    $batchUpdateData[] = $upd_data;
+                }
             }
         }
 
@@ -418,6 +465,8 @@ class Kontrak extends BaseController
             $simpan_update = $kontrakModel->updateBatchDataFromXls($batchUpdateData);
             $jml_update = $simpan_update;
         }
+
+        
 
         if (($jml_import + $jml_update) != 0) {
             $ket_import =  '<hr>' .

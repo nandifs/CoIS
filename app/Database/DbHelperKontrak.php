@@ -72,6 +72,14 @@ class DbHelperKontrak
         return $builder->get()->getResultArray();
     }
 
+    public function deleteKontrakTemporary($tgl_import, $user_id)
+    {
+        $builder = $this->builder('pks__kontrak_temp');
+        $builder->where('tgl_import', $tgl_import)
+            ->where('user_id', $tgl_import);
+        $builder->delete();
+    }
+
 
     public function getKontrakIdByNoP1($key)
     {

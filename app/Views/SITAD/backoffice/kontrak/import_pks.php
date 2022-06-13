@@ -56,6 +56,7 @@
                                     <th>STATUS KONTRAK</th>
                                     <th>JENIS KONTRAK</th>
                                     <th>NO KONTRAK/PERJANJIAN</th>
+                                    <th>TANGGAL KONTRAK</th>
                                     <th>NAMA UNIT PERUSAHAAN</th>
                                     <th>NAMA UNIT PENGGUNA JASA/CUSTOMER</th>
                                     <th>URAIAN PEKERJAAN</th>
@@ -63,6 +64,7 @@
                                     <th>JENIS PEKERJAAN</th>
                                     <th>SUB JENIS PEKERJAAN</th>
                                     <th>NILAI KONTRAK</th>
+                                    <th>NILAI KONTRAK PER BULAN</th>
                                     <th>TANGGAL MULAI SPK</th>
                                     <th>TANGGAL AKHIR SPK</th>
                                     <th>JUMLAH TAD</th>
@@ -97,6 +99,11 @@
                                             $status_kontrak = "<span style='color:#5cb85c; font-weight:bold;'> $status_kontrak </span>";
                                         }
 
+                                        $tgl_kontrak = strtoupper(waktu($row['tanggal_kontrak'], 2));
+                                        $tgl_mulai = strtoupper(waktu($row['tanggal_mulai'], 2));
+                                        $tgl_akhir = strtoupper(waktu($row['tanggal_akhir'], 2));
+
+
                                 ?>
                                         <tr>
                                             <td><?php echo $no; ?>.</td>
@@ -107,6 +114,7 @@
                                             <td class="text-center"><?php echo $jns_kontrak; ?></td>
 
                                             <td><?php echo $row['no_pks_p1']; ?></td>
+                                            <td class="text-center"><?php echo $tgl_kontrak; ?></td>
                                             <td><?php echo $row['unitkerja']; ?></td>
                                             <td><?php echo $row['mitrakerja']; ?></td>
                                             <td><?php echo $row['uraian_pekerjaan']; ?></td>
@@ -115,11 +123,11 @@
                                             <td><?php echo $row['jenis_pekerjaan']; ?></td>
                                             <td><?php echo $row['sub_jenis_pekerjaan']; ?></td>
 
-                                            <td style="text-align: right;"><?php echo number_format($row['nilai_total_ppn'], 2); ?></td>
+                                            <td class="text-right"><?php echo number_format($row['nilai_total_ppn'], 2); ?></td>
+                                            <td class="text-right"><?php echo number_format($row['nilai_bulan_ppn'], 2); ?></td>
 
-                                            <td><?php echo $row['tanggal_mulai']; ?></td>
-                                            <td><?php echo $row['tanggal_akhir']; ?></td>
-
+                                            <td class="text-center"><?php echo $tgl_mulai; ?></td>
+                                            <td class="text-center"><?php echo $tgl_akhir; ?></td>
                                             <td style="text-align: center;"><?php echo $row['jumlah_tad']; ?></td>
                                         </tr>
                                 <?php

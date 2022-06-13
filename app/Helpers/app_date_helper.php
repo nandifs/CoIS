@@ -1,9 +1,15 @@
 <?php
-/*
- * Fungsi untuk menampilkan waktu dan tanggal
- * Parameter $defa_date (yyyy-mm-dd)
-*/
-function waktu($defa_date = null)
+
+/**
+ * Konversi Tanggal MySQL ke hari, DD MMMM YYYY (Indonesia)
+ *  
+ * @param string $defa_date Tanggal dari MySQL (yyyy-mm-dd)
+ * @param integer $format Format output yang di inginkan
+ * 
+ * @return mixed
+ */
+
+function waktu($defa_date = null, $format = 1)
 {
     $array_hari = array(1 => 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu');
     $array_bulan = array(1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
@@ -24,8 +30,13 @@ function waktu($defa_date = null)
         $tanggal = date_format($date, 'j');
         $tahun = date_format($date, 'Y');
     }
+    if ($format == 1) {
+        $ret_date = $hari . ', ' . $tanggal . ' ' . $bulan . ' ' . $tahun;
+    } else if ($format == 2) {
+        $ret_date = $tanggal . ' ' . $bulan . ' ' . $tahun;
+    }
 
-    return $hari . ', ' . $tanggal . ' ' . $bulan . ' ' . $tahun;
+    return $ret_date;
 }
 
 function ambil_tgl()
