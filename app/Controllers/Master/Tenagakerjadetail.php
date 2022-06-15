@@ -442,15 +442,15 @@ class Tenagakerjadetail extends BaseController
 
         $row_number = 0;
 
-        $jmlKontrakSdhAda = 0;
-        $jmlKontrakTdkDitemukan = 0;
+        $jmlTkSdhAda = 0;
+        $jmlTkTdkDitemukan = 0;
 
         //validasi file yang akan di import
         $validation = \Config\Services::validation();
         $file = $this->request->getFile('imp_file');
         $data = array('imp_file' => $file);
 
-        $redirectPath = '/kontrak_pks_import';
+        $redirectPath = '/tenagakerja_import_detail';
 
         if ($validation->run($data, 'import_excel') == FALSE) {
             session()->setFlashdata('errors', $validation->getErrors());
@@ -480,7 +480,7 @@ class Tenagakerjadetail extends BaseController
                 if ($row_number == 1) {
                     $cek_cols = count($row);
                     if ($cek_cols != 16) {
-                        $stat_import = "GAGAL IMPORT KONTRAK: Kolom file import tidak sesuai. Proses import Kontrak dibatalkan.";
+                        $stat_import = "GAGAL IMPORT DATA TENAGA KERJA: Kolom file import tidak sesuai. Proses import dibatalkan.";
                         break;
                     }
                 }

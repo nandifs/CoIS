@@ -261,9 +261,6 @@ class Tenagakerja extends BaseController
 
         $row_number = 0;
 
-        $jmlKontrakSdhAda = 0;
-        $jmlKontrakTdkDitemukan = 0;
-
         //$dbHelper = new DbHelper();
         $dbUnitkerja = new M_unitkerja();
         $dbMitrakerja = new M_mitrakerja();
