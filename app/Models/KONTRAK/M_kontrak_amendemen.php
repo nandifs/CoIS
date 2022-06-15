@@ -10,11 +10,14 @@ class M_kontrak_amendemen extends Model
     protected $returnType     = 'array';
     protected $allowedFields = [
         'kontrak_id', 'no_amendemen',
-        'uraian', 'nilai_bulan_ppn',
-        'nilai_total_ppn', 'tanggal_awal',
-        'tanggal_awal', 'update_oleh'
+        'tanggal_amendemen', 'uraian',
+        'nilai_bulan_ppn', 'nilai_total_ppn',
+        'tanggal_awal', 'tanggal_akhir',
+        'jumlah_tad',
+        'update_tanggal', 'update_oleh'
     ];
-    protected $useTimestamps = true;
+
+    //
 
     public function getAmendemen($id = null)
     {

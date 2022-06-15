@@ -38,7 +38,7 @@
                                         <td><?php echo $row['mitrakerja']; ?></td>
                                         <td><?php echo $row['uraian_pekerjaan']; ?></td>
                                         <td style="text-align: right;"><?php echo number_format($row['nilai_total_ppn'], 2); ?></td>
-                                        <td><?php echo $row['tanggal_mulai']; ?></td>
+                                        <td><?php echo $row['tanggal_awal']; ?></td>
                                         <td><?php echo $row['tanggal_akhir']; ?></td>
                                         <td style="text-align: center;"><?php echo $row['jumlah_tad']; ?></td>
                                         <td style="text-align: center; width: 160px;">

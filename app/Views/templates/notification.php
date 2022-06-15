@@ -68,6 +68,14 @@
     </div>
 <?php endif; ?>
 
+<?php if (session()->getFlashdata('success-import')) : ?>
+    <div class="alert alert-success alert-dismissible mt-2">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><i class="icon fa fa-check"></i> IMPORT DATA SELESAI!</h4>
+        <?= session()->getFlashdata('success-import'); ?>
+    </div>
+<?php endif; ?>
+
 <?php if (session()->getFlashdata('sweet')) {
     echo '<script type="text/javascript"> sweetAlert("' . session()->getFlashdata('sweet') . '");</script>';
 } ?>

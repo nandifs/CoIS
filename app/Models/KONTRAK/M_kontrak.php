@@ -13,7 +13,7 @@ class M_kontrak extends Model
         'no_pks_p1', 'no_pks_p2',
         'uraian_pekerjaan', 'kategori_pekerjaan_id',
         'jenis_pekerjaan_id', 'sub_jenis_pekerjaan_id',
-        'tanggal_mulai', 'tanggal_akhir',
+        'tanggal_awal', 'tanggal_akhir',
         'status_id', 'sub_kontrak',
         'no_io', 'nilai_bulan_ppn', 'nilai_total_ppn', 'jumlah_tad', 'keterangan',
         'update_oleh'

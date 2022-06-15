@@ -11,10 +11,10 @@ class M_kontrak_temporary extends Model
     protected $allowedFields = [
         'validasi', 'status_import', 'kontrak_id',
         'perusahaan_id', 'customer_id',
-        'no_pks_p1', 'no_pks_p2',
+        'no_pks_p1', 'no_pks_p2', 'no_amendemen',
         'uraian_pekerjaan', 'kategori_pekerjaan_id',
         'jenis_pekerjaan_id', 'sub_jenis_pekerjaan_id',
-        'tanggal_mulai', 'tanggal_akhir',
+        'tanggal_awal', 'tanggal_akhir',
         'status_id', 'sub_kontrak',
         'no_io', 'nilai_bulan_ppn', 'nilai_total_ppn', 'jumlah_tad', 'keterangan',
         'import_tanggal', 'import_oleh'

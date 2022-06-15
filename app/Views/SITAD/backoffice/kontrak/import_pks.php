@@ -7,17 +7,16 @@
                     <div class="card-body pb-0">
                         <?= form_open_multipart('/kontrak_pks_validasi_import_xls', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">
-                            <label for="exampleInputFile" class="col-sm-1 col-form-label">Import Data : </label>
+                            <label for="imp_data" class="col-sm-1.2 col-form-label">Import Data : </label>
                             <div class="col-sm-3">
                                 <select class="form-control" id='imp_data' name='imp_data'>
                                     <option value=1 selected>KONTRAK/SPK</option>
-                                    <option value=2>AMENDEMEN</option>
-                                    <option value=3>RAB NORMATIF</option>
-                                    <option value=4>RAB ALAT/MATERIAL</option>
+                                    <option value=2>RAB NORMATIF</option>
+                                    <option value=3>RAB ALAT/MATERIAL</option>
                                 </select>
                             </div>
 
-                            <label for="exampleInputFile" class="col-sm-1 col-form-label">Pilih file Excel : </label>
+                            <label for="exampleInputFile" class="col-sm-1.5 col-form-label">Pilih file Excel : </label>
                             <div class="col-sm-5">
                                 <div class="input-group">
                                     <div class="custom-file">
@@ -56,6 +55,7 @@
                                     <th>STATUS KONTRAK</th>
                                     <th>JENIS KONTRAK</th>
                                     <th>NO KONTRAK/PERJANJIAN</th>
+                                    <th>NO AMENDEMEN</th>
                                     <th>TANGGAL KONTRAK</th>
                                     <th>NAMA UNIT PERUSAHAAN</th>
                                     <th>NAMA UNIT PENGGUNA JASA/CUSTOMER</th>
@@ -72,9 +72,9 @@
                             </thead>
                             <tbody>
                                 <?php
-                                if (!empty($dtKontrak)) {
+                                if (!empty($dtKontrakTemp)) {
                                     $no = 1;
-                                    foreach ($dtKontrak as $row) {
+                                    foreach ($dtKontrakTemp as $row) {
                                         $data_id = $row['id'];
                                         $jns_kontrak = $row['jenis_kontrak'];
 
@@ -100,10 +100,8 @@
                                         }
 
                                         $tgl_kontrak = strtoupper(waktu($row['tanggal_kontrak'], 2));
-                                        $tgl_mulai = strtoupper(waktu($row['tanggal_mulai'], 2));
+                                        $tgl_mulai = strtoupper(waktu($row['tanggal_awal'], 2));
                                         $tgl_akhir = strtoupper(waktu($row['tanggal_akhir'], 2));
-
-
                                 ?>
                                         <tr>
                                             <td><?php echo $no; ?>.</td>
@@ -114,6 +112,7 @@
                                             <td class="text-center"><?php echo $jns_kontrak; ?></td>
 
                                             <td><?php echo $row['no_pks_p1']; ?></td>
+                                            <td><?php echo $row['no_amendemen']; ?></td>
                                             <td class="text-center"><?php echo $tgl_kontrak; ?></td>
                                             <td><?php echo $row['unitkerja']; ?></td>
                                             <td><?php echo $row['mitrakerja']; ?></td>
@@ -142,7 +141,7 @@
                     </div>
                 </div>
 
-                <div class="card card-outline card-warning mt-2 <?= (empty($dtKontrak)) ? "d-none" : ""; ?>">
+                <div class="card card-outline card-warning mt-2 <?= (empty($dtKontrakTemp)) ? "d-none" : ""; ?>">
                     <div class="card-body pb-0">
                         <?= form_open_multipart('/kontrak_pks_proses_import_xls', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">

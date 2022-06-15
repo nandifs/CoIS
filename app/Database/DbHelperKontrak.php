@@ -59,7 +59,7 @@ class DbHelperKontrak
             ->join('pks__mst_kontrak_status g', 'a.status_id=g.id', 'left')
             ->join('pks__kontrak_rab_normatif h', 'a.id=h.kontrak_id', 'left')
             ->join('pks__kontrak_rab_material i', 'a.id=i.kontrak_id', 'left')
-            ->orderBy('a.status_id ASC, c.singkatan ASC');
+            ->orderBy('a.status_id ASC, c.singkatan ASC, a.no_pks_p1 ASC, a.no_amendemen ASC');
 
         if (!is_null($filter)) {
             $builder->where($filter);
@@ -72,19 +72,23 @@ class DbHelperKontrak
         return $builder->get()->getResultArray();
     }
 
-    public function deleteKontrakTemporary($tgl_import, $user_id)
+    public function deleteKontrakTemporary($filter)
     {
         $builder = $this->builder('pks__kontrak_temp');
-        $builder->where('tgl_import', $tgl_import)
-            ->where('user_id', $tgl_import);
+        $builder->where($filter);
         $builder->delete();
     }
-
 
     public function getKontrakIdByNoP1($key)
     {
         $builder = $this->builder('pks__kontrak');
         return $builder->select('id')->getWhere(['no_pks_p1' => $key])->getFirstRow();
+    }
+
+    public function getAmendemenIdByNoAMD($key)
+    {
+        $builder = $this->builder('pks__amendemen');
+        return $builder->select('id')->getWhere(['no_amendemen' => $key])->getFirstRow();
     }
 
     public function getStatusKontrakIdByNama($key)
