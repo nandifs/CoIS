@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class M_tenagakerja_temp extends Model
+class M_tenagakerja_temporary extends Model
 {
     protected $table      = 'mkp__tenagakerja_temp';
     protected $returnType     = 'array';

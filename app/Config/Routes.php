@@ -87,6 +87,8 @@ $routes->post('/tenagakerja_edit_detail', 'Master\Tenagakerjadetail::edit');
 $routes->post('/tenagakerja_update_detail', 'Master\Tenagakerjadetail::update');
 
 $routes->get('/tenagakerja_import_detail', 'Master\Tenagakerjadetail::import_tenagakerja');
+$routes->post('/tenagakerja_validasi_import_xls', 'Master\Tenagakerjadetail::validasi_data_import_tk_xlsx');
+
 
 // Ajax Tenaga Kerja
 $routes->post('/ajax_gettenagakerja', 'Master\Tenagakerja::ajax_get_data_tenagakerja');

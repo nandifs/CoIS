@@ -87,6 +87,15 @@ class DbHelper
         return $builder->get()->getRow();
     }
 
+    public function getWilayahKerjaIdBySingkatan($singkatan)
+    {
+        $builder = $this->builder('org__wilayahkerja');
+        $builder->select('id')
+            ->where('singkatan', $singkatan);
+
+        return $builder->get()->getResult();
+    }
+
     /**--------------------------------------------------------------------
      * HELPER FOR UNIT KERJA
      * --------------------------------------------------------------------
