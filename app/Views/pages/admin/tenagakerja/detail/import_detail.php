@@ -5,10 +5,19 @@
             <div class="col-md-12">
                 <div class="card card-outline card-primary mt-2">
                     <div class="card-body pb-0">
-                        <?= form_open_multipart('/kontrak_pks_proses_import_xls', ['class' => 'form-horizontal']); ?>
+                        <?= form_open_multipart('/tengakerja_proses_import_xls_detail', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">
-                            <label for="exampleInputFile" class="col-sm-1 col-form-label">Pilih file Excel : </label>
-                            <div class="col-sm-9">
+                            <label for="imp_data" class="col-sm-1.1 col-form-label">Import Data : </label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id='imp_data' name='imp_data'>
+                                    <option value=1 selected>TENAGA KERJA</option>
+                                    <option value=2>HAK NORMATIF</option>
+                                    <option value=3>PAYROLL</option>
+                                </select>
+                            </div>
+
+                            <label for="exampleInputFile" class="col-sm-1.1 col-form-label">Pilih file Excel : </label>
+                            <div class="col-sm-5">
                                 <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="exampleInputFile" name="imp_file">
@@ -33,7 +42,7 @@
 
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">DATA KONTRAK</h3>
+                        <h3 class="card-title">DATA TENAGA KERJA</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                             </button>
