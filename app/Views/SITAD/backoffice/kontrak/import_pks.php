@@ -79,14 +79,14 @@
                                         $jns_kontrak = $row['jenis_kontrak'];
 
                                         $status_import = $row["status_import"];
-                                        if (strtoupper($status_import) == "ON VALIDATION") {
+                                        if (strtoupper($status_import) == "IMPORT DATA") {
                                             $status_import = "<span style='color:red;'> $status_import </span>";
                                         } else {
                                             $status_import = "<span style='color:green; font-weight:bold;'> $status_import </span>";
                                         }
 
                                         $validasi = $row["validasi"];
-                                        if (strtoupper($validasi) == "UPDATE DATA") {
+                                        if (strtoupper($validasi) == "MENUNGGU KONFIRMASI") {
                                             $validasi = "<span style='color:#ffc107;'> $validasi </span>";
                                         } else {
                                             $validasi = "<span style='color:#0275d8 ; font-weight:bold;'> $validasi </span>";

@@ -27,6 +27,7 @@
                                     <th>JML TAD</th>
                                     <th>RAB NORMATIF</th>
                                     <th>RAB ALAT/MATERIAL</th>
+                                    <th>AMENDEMEN</th>
                                     <th style="text-align: center;">AKSI</th>
                                 </tr>
                             </thead>
@@ -37,6 +38,7 @@
                                     $data_id = $row['id'];
                                     $rab_normatif = ($row['rab_normatif'] == "") ? "Belum Ada" : $row['rab_normatif'];
                                     $rab_material = ($row['rab_material'] == "") ? "Belum Ada" : $row['rab_material'];
+                                    $jml_amendemen = ($row['jml_amendemen'] == 0) ? "Tidak Ada" : $row['jml_amendemen'] . ' <button type="button" class="btn btn-info btn-sm btn-aksi" title="Tampilkan Data Amendemen" data-id="detail|<?= $data_id; ?>"> Tampilkan</button>';
                                     $status_kontrak = $row["status_kontrak"];
                                     if ($row["status_id"] == "2") {
                                         $status_kontrak = "<span style='color:red; font-weight:bold;'> $status_kontrak </span>";
@@ -56,6 +58,7 @@
                                         <td style="text-align: center;"><?php echo $row['jumlah_tad']; ?></td>
                                         <td style="text-align: center;"><?php echo $rab_normatif; ?></td>
                                         <td style="text-align: center;"><?php echo $rab_material; ?></td>
+                                        <td style="text-align: center;"><?php echo $jml_amendemen; ?></td>
                                         <td style="text-align: center; width: 160px;">
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-info btn-sm btn-aksi" title="Detail" data-id="detail|<?= $data_id; ?>"><i class="fa fa-eye"></i></button>

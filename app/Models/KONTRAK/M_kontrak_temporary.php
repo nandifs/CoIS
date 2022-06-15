@@ -9,9 +9,10 @@ class M_kontrak_temporary extends Model
     protected $table      = 'pks__kontrak_temp';
     protected $returnType     = 'array';
     protected $allowedFields = [
-        'validasi', 'status_import', 'kontrak_id',
+        'status_import', 'validasi', 'kontrak_id',
         'perusahaan_id', 'customer_id',
-        'no_pks_p1', 'no_pks_p2', 'no_amendemen',
+        'no_pks_p1', 'no_pks_p2',
+        'amendemen_id', 'no_amendemen',
         'uraian_pekerjaan', 'kategori_pekerjaan_id',
         'jenis_pekerjaan_id', 'sub_jenis_pekerjaan_id',
         'tanggal_awal', 'tanggal_akhir',
