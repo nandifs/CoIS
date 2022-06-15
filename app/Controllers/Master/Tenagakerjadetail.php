@@ -429,7 +429,7 @@ class Tenagakerjadetail extends BaseController
      * IMPORT FOR DATA TENAGAKERJA
      */
 
-    public function import_xlsx()
+    public function validasi_data_import_xlsx()
     {
         $user_id = $this->user_id;
         $tgl_update = date('Y-m-d H:i:s');
@@ -494,30 +494,53 @@ class Tenagakerjadetail extends BaseController
                 //Set row number
                 $row_number++;
 
-                // get data kontrak from excel
+                // get data tenagakerja from excel
                 $sts_kontrak = $this->dbHelperKontrak->getStatusKontrakIdByNama(trim($row[1]));
-                $no_io = trim($row[3]);
-                $no_kontrak = trim($row[4]);
-                $unitkerja = $this->dbHelperKontrak->getUnitkerjaIdByNama(trim($row[5]));
-                $customer = $this->dbHelperKontrak->getCustomerIdByNama(trim($row[6]));
-                $uraian_pekerjaan = trim($row[7]);
-                $jns_pekerjaan = $this->dbHelperKontrak->getJenisPekerjaanIdByNama(trim($row[8]));
-                $sub_jns_pekerjaan = $this->dbHelperKontrak->getSubJenisPekerjaanByNama(trim($row[9]));
-                $tgl_mulai = $row[10];
-                $tgl_akhir = $row[11];
 
-                $nil_kontrak_perbln_ppn = trim($row[12]);
-                $nil_kontrak_perbln_ppn = str_replace(',', '', $nil_kontrak_perbln_ppn);
-                $nil_kontrak_perbln_ppn = str_replace('.', ',', $nil_kontrak_perbln_ppn);
+                $nip = trim($row[1]);
+                $nama = trim($row[2]);
+                $tmp_lahir = trim($row[3]);
+                $tgl_lahir = trim($row[4]);
+                $no_id = trim($row[5]);
+                $jns_kel = trim($row[6]);
+                $alamat = trim($row[7]);
+                $telepon = trim($row[8]);
+                $email = trim($row[9]);
 
-                $nil_kontrak_total_ppn = trim($row[13]);
-                $nil_kontrak_total_ppn = str_replace(',', '', $nil_kontrak_total_ppn);
-                $nil_kontrak_total_ppn = str_replace('.', ',', $nil_kontrak_total_ppn);
+                $no_pks = trim($row[10]);
+                $no_pkwt = trim($row[11]);
+                $tgl_awal = trim($row[12]);
+                $tgl_akhir = trim($row[13]);
+                $jabatan = trim($row[14]);
+                $wil_kerja = trim($row[15]);
+                $unit_kerja = trim($row[16]);
+                $mitra_kerja = trim($row[17]);
+                $penempatan = trim($row[18]);
+                $keterangan = trim($row[19]);
 
-                $jml_tad =  trim($row[14]);
-                $keterangan =  trim($row[15]);
+                $no_npwp = trim($row[20]);
+                $no_kartu_keluarga = trim($row[21]);
+                $no_bpjs_kt = trim($row[22]);
+                $no_bpjs_ks = trim($row[23]);
+                $no_rek_payroll = trim($row[24]);
+                $bank_rek_payroll = trim($row[25]);
+                $no_rek_dplk = trim($row[26]);
+                $bank_rek_dplk = trim($row[27]);
 
-                $cekKontrakByNoSPK = $this->dbHelperKontrak->getKontrakIdByNoP1($no_kontrak);
+                $pendidikan = trim($row[28]);
+                $prog_studi = trim($row[29]);
+
+                $nama_ibu = trim($row[30]);
+                $nama_istri = trim($row[31]);
+                $nama_istri = trim($row[32]);
+                $anak_ke_1 = trim($row[33]);
+                $anak_ke_2 = trim($row[34]);
+                $anak_ke_3 = trim($row[35]);
+
+                $no_ijazah = trim($row[26]);
+                $no_sertifikat_keahlian = trim($row[37]);
+
+                $cekKontrakByNoSPK = $this->dbHelperKontrak->getKontrakIdByNoP1($no_pks);
 
                 //Validasi data import
                 if ($sts_kontrak == "") {
@@ -525,7 +548,7 @@ class Tenagakerjadetail extends BaseController
                 }
 
                 if (!is_null($cekKontrakByNoSPK)) {
-                    $jmlKontrakSdhAda++;
+                    $jmlTkSdhAda++;
                     continue;
                 }
 
@@ -550,21 +573,27 @@ class Tenagakerjadetail extends BaseController
                 }
 
                 $imp_data = [
-                    "perusahaan_id" => $unitkerja->id,
-                    "customer_id" => $customer->id,
-                    "no_io" => $no_io,
-                    "no_pks_p1" => $no_kontrak,
-                    "uraian_pekerjaan" => $uraian_pekerjaan,
-                    "kategori_pekerjaan_id" => $jns_pekerjaan->kategori_id,
-                    "jenis_pekerjaan_id" => $jns_pekerjaan->id,
-                    "sub_jenis_pekerjaan_id" => $sub_jns_pekerjaan->id,
-                    "tanggal_awal" => date('Y-m-d', strtotime($tgl_mulai)),
-                    "tanggal_akhir" => date('Y-m-d', strtotime($tgl_akhir)),
-                    "nilai_bulan_ppn" => $nil_kontrak_perbln_ppn,
-                    "nilai_total_ppn" => $nil_kontrak_total_ppn,
-                    "jumlah_tad" => $jml_tad,
+                    "nip" => $unitkerja->id,
+                    "nama" => $customer->id,
+                    "jabatan_id" => $no_io,
+                    "unitkerja_id" => $no_kontrak,
+                    "penempatan_id" => $uraian_pekerjaan,
+                    "wilayah_id" => $jns_pekerjaan->kategori_id,
+                    "email" => $jns_pekerjaan->id,
+                    "otoritas_id" => $sub_jns_pekerjaan->id,
+                    "status_id" => date('Y-m-d', strtotime($tgl_mulai)),
+
+                    "no_identitas" => date('Y-m-d', strtotime($tgl_akhir)),
+                    "tempat_lahir" => $nil_kontrak_perbln_ppn,
+                    "tanggal_lahir" => $nil_kontrak_total_ppn,
+                    "jenis_kelamin" => $jml_tad,
+                    "alamat" => $keterangan,
+                    "telepon" => $sts_kontrak->id,
+                    "pendidikan_terakhir" => $sts_kontrak->id,
+                    "program_studi" => $sts_kontrak->id,
                     "keterangan" => $keterangan,
-                    "status_id" => $sts_kontrak->id,
+
+
                     "update_tanggal" => $tgl_update,
                     "update_oleh" => $user_id
                 ];
@@ -585,10 +614,10 @@ class Tenagakerjadetail extends BaseController
                 session()->setFlashdata('danger2', $stat_import);
             } else {
                 if ($jml_import == 0) {
-                    if ($jmlKontrakSdhAda > 0) {
+                    if ($jmlTkSdhAda > 0) {
                         session()->setFlashdata('warning', 'Proses Import Dibatalkan!!!<br>Data Kontrak sudah ada dalam database.<br>Silahkan cek kembali file excel yang telah di import.');
-                    } else if ($jmlKontrakTdkDitemukan > 0) {
-                        session()->setFlashdata('warning', 'Tidak ditemukan data kontrak pada file excel dari ' . $jmlKontrakTdkDitemukan . ' row data yang di import.');
+                    } else if ($jmlTkTdkDitemukan > 0) {
+                        session()->setFlashdata('warning', 'Tidak ditemukan data kontrak pada file excel dari ' . $jmlTkTdkDitemukan . ' row data yang di import.');
                     } else {
                         session()->setFlashdata('warning', 'Data Kontrak tidak berhasil di import.<br>Silahkan cek kembali file excel yang telah di import.');
                     }
