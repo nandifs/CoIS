@@ -1,5 +1,5 @@
 <?php
-$tgl_awal = ubah_tgl_mti($dtKontrak["tanggal_mulai"]);
+$tgl_awal = ubah_tgl_mti($dtKontrak["tanggal_awal"]);
 $tgl_akhir = ubah_tgl_mti($dtKontrak["tanggal_akhir"]);
 
 $status_kontrak = $dtKontrak["status_kontrak"];

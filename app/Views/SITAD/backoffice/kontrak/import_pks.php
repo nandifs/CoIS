@@ -7,17 +7,16 @@
                     <div class="card-body pb-0">
                         <?= form_open_multipart('/kontrak_pks_validasi_import_xls', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">
-                            <label for="exampleInputFile" class="col-sm-1 col-form-label">Import Data : </label>
+                            <label for="imp_data" class="col-sm-1.2 col-form-label">Import Data : </label>
                             <div class="col-sm-3">
                                 <select class="form-control" id='imp_data' name='imp_data'>
                                     <option value=1 selected>KONTRAK/SPK</option>
-                                    <option value=2>AMENDEMEN</option>
-                                    <option value=3>RAB NORMATIF</option>
-                                    <option value=4>RAB ALAT/MATERIAL</option>
+                                    <option value=2>RAB NORMATIF</option>
+                                    <option value=3>RAB ALAT/MATERIAL</option>
                                 </select>
                             </div>
 
-                            <label for="exampleInputFile" class="col-sm-1 col-form-label">Pilih file Excel : </label>
+                            <label for="exampleInputFile" class="col-sm-1.5 col-form-label">Pilih file Excel : </label>
                             <div class="col-sm-5">
                                 <div class="input-group">
                                     <div class="custom-file">
@@ -39,7 +38,7 @@
 
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">IMPORT DATA KONTRAK/SPK</h3>
+                        <h3 class="card-title">VALIDASI DATA KONTRAK/SPK (Jika data sudah sesuai. Klik tombol Konfirmasi untuk melanjutkan)</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                             </button>
@@ -56,6 +55,8 @@
                                     <th>STATUS KONTRAK</th>
                                     <th>JENIS KONTRAK</th>
                                     <th>NO KONTRAK/PERJANJIAN</th>
+                                    <th>NO AMENDEMEN</th>
+                                    <th>TANGGAL KONTRAK</th>
                                     <th>NAMA UNIT PERUSAHAAN</th>
                                     <th>NAMA UNIT PENGGUNA JASA/CUSTOMER</th>
                                     <th>URAIAN PEKERJAAN</th>
@@ -63,6 +64,7 @@
                                     <th>JENIS PEKERJAAN</th>
                                     <th>SUB JENIS PEKERJAAN</th>
                                     <th>NILAI KONTRAK</th>
+                                    <th>NILAI KONTRAK PER BULAN</th>
                                     <th>TANGGAL MULAI SPK</th>
                                     <th>TANGGAL AKHIR SPK</th>
                                     <th>JUMLAH TAD</th>
@@ -70,33 +72,36 @@
                             </thead>
                             <tbody>
                                 <?php
-                                if (!empty($dtKontrak)) {
+                                if (!empty($dtKontrakTemp)) {
                                     $no = 1;
-                                    foreach ($dtKontrak as $row) {
+                                    foreach ($dtKontrakTemp as $row) {
                                         $data_id = $row['id'];
-                                        $jns_kontrak = "SPK";
+                                        $jns_kontrak = $row['jenis_kontrak'];
 
                                         $status_import = $row["status_import"];
-                                        if (strtoupper($status_import) == "ON VALIDATION") {
+                                        if (strtoupper($status_import) == "IMPORT DATA") {
                                             $status_import = "<span style='color:red;'> $status_import </span>";
                                         } else {
                                             $status_import = "<span style='color:green; font-weight:bold;'> $status_import </span>";
                                         }
 
                                         $validasi = $row["validasi"];
-                                        if (strtoupper($validasi) == "UPDATE DATA") {
+                                        if (strtoupper($validasi) == "MENUNGGU KONFIRMASI") {
                                             $validasi = "<span style='color:#ffc107;'> $validasi </span>";
                                         } else {
-                                            $validasi = "<span style='color:green; font-weight:bold;'> $validasi </span>";
+                                            $validasi = "<span style='color:#0275d8 ; font-weight:bold;'> $validasi </span>";
                                         }
 
                                         $status_kontrak = $row["status_kontrak"];
                                         if ($row["status_id"] == "2") {
                                             $status_kontrak = "<span style='color:red; font-weight:bold;'> $status_kontrak </span>";
                                         } else {
-                                            $status_kontrak = "<span style='color:green; font-weight:bold;'> $status_kontrak </span>";
+                                            $status_kontrak = "<span style='color:#5cb85c; font-weight:bold;'> $status_kontrak </span>";
                                         }
 
+                                        $tgl_kontrak = strtoupper(waktu($row['tanggal_kontrak'], 2));
+                                        $tgl_mulai = strtoupper(waktu($row['tanggal_awal'], 2));
+                                        $tgl_akhir = strtoupper(waktu($row['tanggal_akhir'], 2));
                                 ?>
                                         <tr>
                                             <td><?php echo $no; ?>.</td>
@@ -107,6 +112,8 @@
                                             <td class="text-center"><?php echo $jns_kontrak; ?></td>
 
                                             <td><?php echo $row['no_pks_p1']; ?></td>
+                                            <td><?php echo $row['no_amendemen']; ?></td>
+                                            <td class="text-center"><?php echo $tgl_kontrak; ?></td>
                                             <td><?php echo $row['unitkerja']; ?></td>
                                             <td><?php echo $row['mitrakerja']; ?></td>
                                             <td><?php echo $row['uraian_pekerjaan']; ?></td>
@@ -115,11 +122,11 @@
                                             <td><?php echo $row['jenis_pekerjaan']; ?></td>
                                             <td><?php echo $row['sub_jenis_pekerjaan']; ?></td>
 
-                                            <td style="text-align: right;"><?php echo number_format($row['nilai_total_ppn'], 2); ?></td>
+                                            <td class="text-right"><?php echo number_format($row['nilai_total_ppn'], 2); ?></td>
+                                            <td class="text-right"><?php echo number_format($row['nilai_bulan_ppn'], 2); ?></td>
 
-                                            <td><?php echo $row['tanggal_mulai']; ?></td>
-                                            <td><?php echo $row['tanggal_akhir']; ?></td>
-
+                                            <td class="text-center"><?php echo $tgl_mulai; ?></td>
+                                            <td class="text-center"><?php echo $tgl_akhir; ?></td>
                                             <td style="text-align: center;"><?php echo $row['jumlah_tad']; ?></td>
                                         </tr>
                                 <?php
@@ -134,7 +141,7 @@
                     </div>
                 </div>
 
-                <div class="card card-outline card-warning mt-2 <?= (empty($dtKontrak)) ? "d-none" : ""; ?>">
+                <div class="card card-outline card-warning mt-2 <?= (empty($dtKontrakTemp)) ? "d-none" : ""; ?>">
                     <div class="card-body pb-0">
                         <?= form_open_multipart('/kontrak_pks_proses_import_xls', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">

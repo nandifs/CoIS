@@ -25,7 +25,7 @@ class DbHelperKontrak
     public function getKontrak($id = null, $filter = null)
     {
         $builder = $this->builder('pks__kontrak a');
-        $builder->select('a.*, b.unitkerja, c.mitrakerja, d.nama as kategori, e.jenis as jenis_pekerjaan, f.sub_jenis as sub_jenis_pekerjaan, g.status as status_kontrak, h.kontrak_id as rab_normatif, i.kontrak_id as rab_material')
+        $builder->select('a.*, b.unitkerja, c.mitrakerja, d.nama as kategori, e.jenis as jenis_pekerjaan, f.sub_jenis as sub_jenis_pekerjaan, g.status as status_kontrak, h.kontrak_id as rab_normatif, i.kontrak_id as rab_material, (select count(*) from pks__amendemen j where a.id=j.kontrak_id) as jml_amendemen')
             ->join('org__unitkerja b', 'a.perusahaan_id=b.id', 'left')
             ->join('org__mitrakerja c', 'a.customer_id=c.id', 'left')
             ->join('pks__mst_pekerjaan_kategori d', 'a.kategori_pekerjaan_id=d.id', 'left')
@@ -59,7 +59,7 @@ class DbHelperKontrak
             ->join('pks__mst_kontrak_status g', 'a.status_id=g.id', 'left')
             ->join('pks__kontrak_rab_normatif h', 'a.id=h.kontrak_id', 'left')
             ->join('pks__kontrak_rab_material i', 'a.id=i.kontrak_id', 'left')
-            ->orderBy('a.status_id ASC, c.singkatan ASC');
+            ->orderBy('a.status_id ASC, c.singkatan ASC, a.no_pks_p1 ASC, a.no_amendemen ASC');
 
         if (!is_null($filter)) {
             $builder->where($filter);
@@ -72,11 +72,23 @@ class DbHelperKontrak
         return $builder->get()->getResultArray();
     }
 
+    public function deleteKontrakTemporary($filter)
+    {
+        $builder = $this->builder('pks__kontrak_temp');
+        $builder->where($filter);
+        $builder->delete();
+    }
 
     public function getKontrakIdByNoP1($key)
     {
         $builder = $this->builder('pks__kontrak');
         return $builder->select('id')->getWhere(['no_pks_p1' => $key])->getFirstRow();
+    }
+
+    public function getAmendemenIdByNoAMD($key)
+    {
+        $builder = $this->builder('pks__amendemen');
+        return $builder->select('id, kontrak_id')->getWhere(['no_amendemen' => $key])->getFirstRow();
     }
 
     public function getStatusKontrakIdByNama($key)

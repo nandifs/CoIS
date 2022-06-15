@@ -558,7 +558,7 @@ class Tenagakerjadetail extends BaseController
                     "kategori_pekerjaan_id" => $jns_pekerjaan->kategori_id,
                     "jenis_pekerjaan_id" => $jns_pekerjaan->id,
                     "sub_jenis_pekerjaan_id" => $sub_jns_pekerjaan->id,
-                    "tanggal_mulai" => date('Y-m-d', strtotime($tgl_mulai)),
+                    "tanggal_awal" => date('Y-m-d', strtotime($tgl_mulai)),
                     "tanggal_akhir" => date('Y-m-d', strtotime($tgl_akhir)),
                     "nilai_bulan_ppn" => $nil_kontrak_perbln_ppn,
                     "nilai_total_ppn" => $nil_kontrak_total_ppn,
