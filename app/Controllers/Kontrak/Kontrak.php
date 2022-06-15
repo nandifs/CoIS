@@ -161,8 +161,8 @@ class Kontrak extends BaseController
     public function validasi_import_xlsx()
     {
         $user_id = $this->user_id;
-        $tgl_update = date('Y-m-d H:i:s');
-        $tgl_import = $tgl_update;
+        $tgl_import = date('Y-m-d H:i:s');
+
         $validasi = "Import Data";
 
         $kontrak_id = 0;
@@ -205,7 +205,7 @@ class Kontrak extends BaseController
             $data = $spreadsheet->getActiveSheet()->toArray();
 
             //Save to temporary table
-            $kontrakModel = new M_kontrak_temporary();
+            $kontrakTempModel = new M_kontrak_temporary();
 
             $batchData = array();
             foreach ($data as $idx => $row) {
@@ -290,7 +290,6 @@ class Kontrak extends BaseController
 
                 $imp_data = [
                     "jenis_kontrak" => $jenis_kontrak,
-                    "tgl_import" => $tgl_import,
                     "validasi" => $validasi,
                     "status_import" => "On Validation",
                     "kontrak_id" => $kontrak_id,
@@ -310,7 +309,8 @@ class Kontrak extends BaseController
                     "jumlah_tad" => $jml_tad,
                     "keterangan" => $keterangan,
                     "status_id" => $sts_kontrak->id,
-                    "update_oleh" => $user_id
+                    "import_tanggal" => $tgl_import,
+                    "import_oleh" => $user_id
                 ];
 
                 // Save data to batch
@@ -319,7 +319,7 @@ class Kontrak extends BaseController
 
             if ($stat_import == "") {
                 if (count($batchData) != 0) {
-                    $simpan = $kontrakModel->insertBatchDataFromXls($batchData);
+                    $simpan = $kontrakTempModel->insertBatchDataFromXls($batchData);
                     $jml_import = $simpan;
                     $ket_import =  '<hr>' .
                         'Jumlah data    : ' . $jml_import . '<br>' .
@@ -466,7 +466,7 @@ class Kontrak extends BaseController
             $jml_update = $simpan_update;
         }
 
-        
+
 
         if (($jml_import + $jml_update) != 0) {
             $ket_import =  '<hr>' .
