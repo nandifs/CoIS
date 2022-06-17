@@ -21,8 +21,8 @@ class DbHelperTenagakerja
 	| ----------------------SERVER SIDE DATA PERTANYAAN----------------------------------
 	*/
 
-    private $column_order = array(null, 'a.nip', 'a.nama', 'b.singkatan', 'c.singkatan', 'd.singkatan', 'e.singkatan'); //set column field database for datatable orderable
-    private $column_search = array('a.nip', 'a.nama', 'b.singkatan', 'c.singkatan', 'd.singkatan', 'e.singkatan'); //set column field database for datatable searchable 
+    private $column_order = array(null, 'a.nip', 'a.nama', 'b.singkatan', 'c.singkatan', 'd.singkatan', 'e.singkatan', 'f.status'); //set column field database for datatable orderable
+    private $column_search = array('a.nip', 'a.nama', 'b.singkatan', 'c.singkatan', 'd.singkatan', 'e.singkatan', 'f.status'); //set column field database for datatable searchable 
     private $order = array('c.singkatan' => 'asc'); // default order 
 
     private function tabel_tenagakerja($appId, $mitrakerja_id)
@@ -31,11 +31,12 @@ class DbHelperTenagakerja
         $mitrakerja = $dbMitrakerja->getMitraKerja($mitrakerja_id);
 
         $this->builder('mkp__tenagakerja a');
-        $this->builder->select('a.id, a.nip, a.nama, a.jabatan_id, a.unitkerja_id, a.penempatan_id, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, e.singkatan as wilayahkerja')
+        $this->builder->select('a.id, a.nip, a.nama, a.jabatan_id, a.unitkerja_id, a.penempatan_id, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, e.singkatan as wilayahkerja, f.status as status_tenagakerja')
             ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
             ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
             ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
             ->join('org__wilayahkerja e', 'a.wilayah_id=e.id', 'left')
+            ->join('mkp__tenagakerja_status f', 'a.status_id=f.id', 'left')
             ->orderBy('c.singkatan, d.singkatan, b.tingkat', 'asc');
 
         if ($mitrakerja['kelas'] == 1) {

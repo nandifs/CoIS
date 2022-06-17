@@ -98,8 +98,11 @@ if ($page == "login") {
                     $page = '/pages/admin/jabatan/edit';
                     break;
 
-                case 'tenagakerja_detail_daftar':
+                case 'tenagakerja_detail':
                     $page = '/pages/admin/tenagakerja/detail/index';
+                    break;
+                case 'tenagakerja_detail_daftar':
+                    $page = '/pages/admin/tenagakerja/detail/laporan_tenagakerja_detail';
                     break;
                 case 'tenagakerja_detail_info':
                     $page = '/pages/admin/tenagakerja/detail/info';

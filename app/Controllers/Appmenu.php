@@ -14,9 +14,18 @@ class Appmenu extends BaseController
         $parent_menu = $selMenu['parent_id'];
         $page = $selMenu['menu_link'];
 
+        $level = $selMenu['menu_level'];
+        if ($level == 2) {
+            $topMenu = $menuModel->getMenu($parent_menu);
+            $parent_top_menu = $topMenu['parent_id'];
+        } else {
+            $parent_top_menu = 0;
+        }
+
         $selectedMenu = [
             'menu_id' => $idMenu,
-            'menu_parent' => $parent_menu
+            'menu_parent' => $parent_menu,
+            'menu_parent_top' => $parent_top_menu,
         ];
 
         session()->set('selected_menu', $selectedMenu);

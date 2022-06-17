@@ -27,7 +27,7 @@
                                         }  ?>
                                     </select>
                                 </div>
-                                <div class="col-sm-5 d-none">
+                                <div class="col-sm-5">
                                     <div class="panel panel-default float-right">
                                         <div class="panel-body">
                                             <button type="button" class="btn btn-warning <?= ($dcUser["oid"] != 1) ? "d-none" : ""; ?>" data-toggle="modal" data-target="#modal-import">
@@ -51,14 +51,13 @@
                             <table id="tbl-tenagakerja" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th style="width: 30px;">NO</th>
-                                        <th>STATUS</th>
+                                        <th style="width: 30px;">No.</th>
                                         <th>NIP</th>
-                                        <th>NAMA</th>
-                                        <th>JABATAN</th>
-                                        <th>UNIT KERJA</th>
-                                        <th>PENEMPATAN</th>
-                                        <th>WILAYAH</th>
+                                        <th>Nama</th>
+                                        <th>Jabatan</th>
+                                        <th>Unit Kerja</th>
+                                        <th>Penempatan</th>
+                                        <th>Wilayah</th>
                                         <th style="text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>

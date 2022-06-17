@@ -85,3 +85,70 @@ function addZeroSpaces($text, $title = null, $length = 0)
         return $title . str_repeat("0", $lenofchar) . $text;
     }
 }
+
+function createMenuItem($title, $link, $icon)
+{
+    echo "<li class='nav-item'>
+            <a href='$link' class='nav-link'>
+                <i class='nav-icon $icon'></i>
+                <p>$title</p>
+            </a>
+          </li>";
+}
+
+function createMenuTree($title, $link, $icon, $arr_menu, $parent_id, $sel_menu)
+{
+    echo "<li class='nav-item " . (($sel_menu['menu_parent'] == $parent_id || $sel_menu['menu_parent_top'] == $parent_id) ? "menu-open" : "") . "'>";
+    echo "  <a href='$link' class='nav-link'>
+                <i class='nav-icon $icon'></i>
+                <p>
+                    $title
+                    <i class='right fas fa-angle-left'></i>
+                </p>
+            </a>";
+    echo "  <ul class='nav nav-treeview'>";
+    foreach ($arr_menu as $item) {
+        if ($item['parent_id'] == $parent_id) {
+            if ($item['menu_link'] != "#" && $item['menu_level'] == 1) {
+                echo "<li class='nav-item'>
+                        <a href='/menu/" . $item["id"] . "' class='nav-link " . (($sel_menu['menu_id'] == $item['id']) ? " active" : "") . "'>
+                            <i class='nav-icon " .  (($sel_menu['menu_id'] == $item['id']) ? "far fa-dot-circle" : $item["menu_icon"]) . "'></i>
+                            <p>" . $item["menu_title"] . "</p>
+                        </a>
+                      </li>";
+            } else {
+                $sub_parent_id = $item['id'];
+                createMenuTree_lv2($item['menu_title'], $item['menu_link'], $arr_menu, $sub_parent_id, $sel_menu);
+            }
+        }
+    }
+    echo "  </ul>";
+    echo "</li>";
+}
+
+function createMenuTree_lv2($title, $link, $arr_menu, $parent_id, $sel_menu)
+{
+    echo "<li class='nav-item  " . (($sel_menu['menu_parent'] == $parent_id) ? "menu-open" : "") . "'>";
+    echo "  <a href='$link' class='nav-link'>
+                <i class='nav-icon fas fa-circle'></i>
+                <p>
+                    $title
+                    <i class='right fas fa-angle-left'></i>
+                </p>
+            </a>";
+    echo "  <ul class='nav nav-treeview'>";
+    foreach ($arr_menu as $item) {
+        //dd("MENU_ID : " . $sel_menu['menu_id'] . " VS " . $item['id']);
+        if ($item['parent_id'] == $parent_id) {
+            echo "<li class='nav-item'>                    
+                    <a href='/menu/" . $item["id"] . "' class='nav-link " . (($sel_menu['menu_id'] == $item['id']) ? " active" : "") . "'>
+                        &nbsp;&nbsp;&nbsp;
+                        <i class='nav-icon " .  (($sel_menu['menu_id'] == $item['id']) ? "far fa-dot-circle" : $item["menu_icon"]) . "'></i>
+                        <p>" . $item["menu_title"] . "</p>
+                    </a>
+                    </li>";
+        }
+    }
+    echo "  </ul>";
+    echo "</li>";
+}

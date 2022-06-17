@@ -80,7 +80,7 @@ $routes->post('/tenagakerja_delete/(:num)', 'Master\Tenagakerja::delete_by_ajax/
 // Tenaga Kerja Detail
 $routes->get('/tenagakerja_info_detail', 'Master\Tenagakerjadetail::info');
 $routes->get('/tenagakerja_detail', 'Master\Tenagakerjadetail::index');
-$routes->get('/tenagakerja_daftar_detail', 'Master\Tenagakerjadetail::daftar_tenagakerja');
+$routes->get('/tenagakerja_daftar_detail', 'Master\Tenagakerjadetail::laporan');
 
 $routes->get('/tenagakerja_add_detail', 'Master\Tenagakerjadetail::add');
 $routes->post('/tenagakerja_save_detail', 'Master\Tenagakerjadetail::save');
