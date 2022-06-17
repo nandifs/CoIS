@@ -9,7 +9,7 @@ class M_tenagakerja_detail extends Model
     protected $table      = 'mkp__tenagakerja_detail';
     protected $primaryKey = 'pegawai_id';
     protected $returnType     = 'array';
-    protected $allowedFields = ['pegawai_id', 'no_identitas', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'alamat', 'telepon', 'pendidikan_terakhir', 'program_studi'];
+    protected $allowedFields = ['pegawai_id', 'no_identitas', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'alamat', 'telepon', 'pendidikan_id', 'program_studi'];
 
     public function insertBatchDataFromXls($data)
     {

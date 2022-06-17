@@ -16,12 +16,14 @@ class Tenagakerjadetail extends BaseController
 {
     protected $dbHelper;
     protected $dbTenagakerja;
+    protected $dbTenagakerjaDetail;
     protected $dbJabatan;
 
 
     public function __construct()
     {
         $this->dbHelper = new DbHelper();
+
         $this->dbTenagakerja = new M_tenagakerja();
         $this->dbTenagakerjaDetail = new M_tenagakerja_detail();
 
@@ -75,7 +77,8 @@ class Tenagakerjadetail extends BaseController
             return redirect()->to("/");
         }
 
-        $dtTenagakerja = $this->dbHelper->getTenagakerjaDetail();
+        $filter_temp = ["import_oleh " => $this->user_id];
+        $dtTenagakerjaTemp = $this->dbHelper->getTenagakerjaTemporary($filter_temp);
 
         $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');
         $appJS .=  loadJS('tenagakerja/data_tenagakerja.js', 'appjs');
@@ -83,7 +86,7 @@ class Tenagakerjadetail extends BaseController
         $this->dtContent['title'] = "Data Tenaga Kerja";
         $this->dtContent['page'] = "tenagakerja_detail_import";
 
-        $this->dtContent['dtTenagakerja'] = $dtTenagakerja;
+        $this->dtContent['dtTenagakerjaTemp'] = $dtTenagakerjaTemp;
         $this->dtContent['appJSFoot'] = $appJS;
 
         return view($this->appName . '/v_app', $this->dtContent);
@@ -433,27 +436,28 @@ class Tenagakerjadetail extends BaseController
     public function validasi_data_import_tk_xlsx()
     {
         $user_id = $this->user_id;
-        $tgl_update = date('Y-m-d H:i:s');
 
-        $jml_import = 0;
-        $jml_import_ada = 0;
+        //hapus data kontrak di tabel temporary jika sudah ada data dengan user dan tanggal import yang sama
+        $filter_deleted = ["import_oleh" => $user_id];
+        $this->dbHelper->deleteTenagakerjaTemporary($filter_deleted);
 
-        $stat_import = "";
-        $ket_import = "";
+        $cek_file_import = "OK";
+
+        $jml_data_baru = 0;
+        $jml_data_updated = 0;
+
+        $jml_data_gl = 0; //jumlah data tidak dapat diimport/Gagal Import
 
         $row_number = 0;
 
-        $jmlTkSdhAda = 0;
-        $jmlTkTdkDitemukan = 0;
-
-        //validasi file yang akan di import
+        //validasi file excel yang akan di import
         $validation = \Config\Services::validation();
         $file = $this->request->getFile('imp_file');
-        $data = array('imp_file' => $file);
+        $datafile = array('imp_file' => $file);
 
         $redirectPath = '/tenagakerja_import_detail';
 
-        if ($validation->run($data, 'import_excel') == FALSE) {
+        if ($validation->run($datafile, 'import_excel') == FALSE) {
             session()->setFlashdata('errors', $validation->getErrors());
             return redirect()->to($redirectPath);
         } else {
@@ -473,40 +477,51 @@ class Tenagakerjadetail extends BaseController
 
             $data = $spreadsheet->getActiveSheet()->toArray();
 
-            $dtTkTemp = new M_tenagakerja_temporary();
+            $dtTenagakerjaTemp = new M_tenagakerja_temporary();
+
             $batchData = array();
             foreach ($data as $idx => $row) {
                 //Cek kolom terakhir file import
                 //Jika panjang kolom tidak sesuai berarti salah file import
-                if ($row_number == 1) {
+                if ($row_number == 0) {
                     $cek_cols = count($row);
-                    if ($cek_cols != 61) {
-                        $stat_import = "GAGAL IMPORT DATA TENAGA KERJA: Kolom file import tidak sesuai. Proses import dibatalkan.";
+                    if ($cek_cols != 63) {
+                        $cek_file_import = "GAGAL IMPORT DATA TENAGA KERJA: Kolom file import tidak sesuai. Proses import dibatalkan.";
                         break;
                     }
                 }
 
                 // lewati baris ke 0 dan ke 1 pada file excel
-                // dalam kasus ini, array ke 0 adalah paratitle
-                if ($idx < 2) {
+                // dalam kasus ini, array ke 0 adalah paratitle                
+                if ($idx < 4) {
                     continue;
                 }
 
                 //Set row number
                 $row_number++;
 
-                // get data tenagakerja from excel
-                $sts_kontrak = $this->dbHelperKontrak->getStatusKontrakIdByNama(trim($row[1]));
+                $status_import = "Import Data";
+                $validasi = array();
 
+                //cek and get kontrak id from kolom no pks
                 $no_pks = trim($row[10]);
+                $kontrak_pks = $this->dbHelper->getKontrakIdByNoP1($no_pks);
+                $kontrak_pks_id = (is_null($kontrak_pks)) ? 0 : $kontrak_pks->id;
 
-                $kontrak_pks_id = $this->dbHelperKontrak->getKontrakIdByNoP1($no_pks);
-
-                dd($kontrak_pks_id);
+                // get data tenagakerja from excel
                 $nip = trim($row[1]);
+                $cek_tenagakerja = $this->dbHelper->getTenagakerjaIdByNIP($nip);
+                $tenagakerja_id = (is_null($cek_tenagakerja)) ? 0 : $cek_tenagakerja->id;
+                if (is_null($cek_tenagakerja)) {
+                    $jml_data_baru++;
+                } else {
+                    $status_import = "Update Data";
+                    $jml_data_updated++;
+                }
+
                 $nama = trim($row[2]);
                 $tmp_lahir = trim($row[3]);
-                $tgl_lahir = trim($row[4]);
+                $tgl_lahir = ubah_tgl_itm(trim($row[4]));
 
                 $no_identitas = trim($row[5]);
                 $jns_kel = trim($row[6]);
@@ -515,18 +530,31 @@ class Tenagakerjadetail extends BaseController
                 $email = trim($row[9]);
 
                 $no_pkwt = trim($row[11]);
-                $tgl_awal = trim($row[12]);
-                $tgl_akhir = trim($row[13]);
+                $tgl_awal = ubah_tgl_itm(trim($row[12]));
+                $tgl_akhir = ubah_tgl_itm(trim($row[13]));
+
+                //cek tanggal awal dan tanggal akhir pkwt/pkwtt
+
                 $jabatan = trim($row[14]);
                 $wil_kerja = trim($row[15]);
                 $unit_kerja = trim($row[16]);
                 $mitra_kerja = trim($row[17]);
-                $penempatan = trim($row[18]);
+                $penempatan = $mitra_kerja . " " . trim($row[18]);
                 $keterangan = trim($row[19]);
 
-                //get id jabatan, wil_kerja, unitkerja, mitrakerja dan penempatan
-                $jabatan_id = $this->dbHelper->getWilayahKerjaIdBySingkatan($wil_kerja);
-                dd($jabatan_id);
+
+                //cek and get id jabatan, wil_kerja, unitkerja, mitrakerja dan penempatan                
+                $dtJabatan = $this->dbHelper->getJabatanIdBySingkatan($jabatan);
+                $dtUnitkerja = $this->dbHelper->getUnitKerjaIdByNama($unit_kerja);
+                $dtMitrakerja = $this->dbHelper->getMitrakerjaIdByNama($mitra_kerja);
+                $dtPenempatan = $this->dbHelper->getMitrakerjaIdByNama($penempatan);
+                $dtWilayah = $this->dbHelper->getWilayahKerjaIdBySingkatan($wil_kerja);
+
+                $jabatan_id = (is_null($dtJabatan)) ? 0 : $dtJabatan->id;
+                $unitkerja_id = (is_null($dtUnitkerja)) ? 0 : $dtUnitkerja->id;
+                $mitrakerja_id = (is_null($dtMitrakerja)) ? 0 : $dtMitrakerja->id;
+                $penempatan_id = (is_null($dtPenempatan)) ? 0 : $dtPenempatan->id;
+                $wilayah_id = (is_null($dtWilayah)) ? 0 : $dtWilayah->id;
 
                 $no_npwp = trim($row[20]);
                 $no_kartu_keluarga = trim($row[21]);
@@ -537,7 +565,20 @@ class Tenagakerjadetail extends BaseController
                 $no_rek_dplk = trim($row[26]);
                 $bank_rek_dplk = trim($row[27]);
 
+                $dtBankPayroll = $this->dbHelper->getBankIdBySingkatan($bank_rek_payroll);
+                $dtBankDPLK = $this->dbHelper->getBankIdBySingkatan($bank_rek_dplk);
+
+                $bank_rek_payroll_id =  (is_null($dtBankPayroll)) ? 0 : $dtBankPayroll->id;
+                $bank_rek_dplk_id =  (is_null($dtBankDPLK)) ? 0 : $dtBankDPLK->id;
+
                 $pendidikan = trim($row[28]);
+
+                $pendidikan = ($pendidikan == "STM") ? "SMK" : $pendidikan;
+                $pendidikan = ($pendidikan == "SMU") ? "SLTA" : $pendidikan;
+
+                $dtPendidikan = $this->dbHelper->getJenjangPendidikanByNama($pendidikan);
+                $pendidikan_id =  (is_null($dtPendidikan)) ? 0 : $dtPendidikan->id;
+
                 $prog_studi = trim($row[29]);
 
                 $nama_ibu = trim($row[30]);
@@ -549,118 +590,273 @@ class Tenagakerjadetail extends BaseController
                 $no_skk1 = trim($row[35]);
                 $no_skk2 = trim($row[36]);
 
-
                 //Validasi data import
-                if ($sts_kontrak == "") {
-                    break;
-                }
-
                 if (is_null($kontrak_pks_id)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Unit Kerja '" . $row[4] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
-                    break;
-                    continue;
+                    $validasi[] = "- Kontrak/SPK tidak ditemukan";
                 }
 
-                if (is_null($unit_kerja)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Unit Kerja '" . $row[4] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
-                    break;
+                if (is_null($dtUnitkerja)) {
+                    $validasi[] = "- Unit Kerja tidak ditemukan";
                 }
 
-                if (is_null($mitra_kerja)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Nama Customer '" . $row[5] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
-                    break;
+                if (is_null($dtMitrakerja)) {
+                    $validasi[] = "- Data Mitra Kerja/Customer tidak ditemukan";
                 }
 
-                if (is_null($penempatan)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Jenis pekerjaan '" . $row[7] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
-                    break;
+                if (is_null($dtPenempatan)) {
+                    $validasi[] = "- Unit tempat penempatan tidak ditemukan";
                 }
 
-                if (is_null($penempatan)) {
-                    $stat_import = "GAGAL IMPORT : <br> Row Number: " . $row_number . " <br> Err desk: Sub Jenis pekerjaan '" . $row[8] . "' tidak ditemukan. <br>Proses import Kontrak dibatalkan.";
-                    break;
+                if (is_null($dtWilayah)) {
+                    $validasi[] = "- Wilayah kerja tidak ditemukan";
+                }
+
+                if (is_null($dtBankPayroll)) {
+                    $validasi[] = "- Data Bank Rek Payroll tidak ditemukan";
+                }
+
+                if (is_null($dtBankDPLK)) {
+                    $validasi[] = "- Data Bank Rek DPLK tidak ditemukan";
+                }
+
+                if (is_null($dtPendidikan)) {
+                    $validasi[] = "- Jenjang Pendidikan '$pendidikan' tidak ditemukan";
+                }
+
+                if (empty($validasi)) {
+                    $ket_validasi = "Menunggu konfirmasi";
+                } else {
+                    $status_import = "GAGAL IMPORT";
+                    $ket_validasi = implode("<br>", $validasi);
+                    $jml_data_gl++;
                 }
 
                 $imp_data = [
-                    "kontrak_spk_id" => $kontrak_pks_id,
+                    "status_import"  => $status_import,
+                    "validasi"       => $ket_validasi,
 
-                    "nip" => $nip,
+                    "kontrak_pks_id" => $kontrak_pks_id,
+                    "tenagakerja_id" => $tenagakerja_id,
+                    "nip"  => $nip,
                     "nama" => $nama,
-                    "tempat_lahir" => $tmp_lahir,
+
+                    "no_identitas"  => $no_identitas,
+                    "tempat_lahir"  => $tmp_lahir,
                     "tanggal_lahir" => $tgl_lahir,
-
-                    "no_identitas" => $no_identitas,
                     "jenis_kelamin" => $jns_kel,
-                    "alamat" => $alamat,
+                    "alamat"  => $alamat,
                     "telepon" => $telepon,
-                    "email" => $email,
+                    "email"   => $email,
 
-                    "no_pkwt" => $no_pkwt,
-                    "tanggal_awal" => $tgl_awal,
+                    "no_pkwt"       => $no_pkwt,
+                    "tanggal_awal"  => $tgl_awal,
                     "tanggal_akhir" => $tgl_akhir,
-                    "jabatan_id" => $jabatan_id,
-                    "unitkerja_id" => $unitkerja_id,
+
+                    "jabatan_id"    => $jabatan_id,
+                    "unitkerja_id"  => $unitkerja_id,
+                    "mitrakerja_id" => $mitrakerja_id,
                     "penempatan_id" => $penempatan_id,
-                    "wilayah_id" => $wilayah_id,
+                    "wilayah_id"    => $wilayah_id,
 
-                    "keterangan" => $keterangan,
-
-                    "no_npwp" => $no_npwp,
-                    "no_kartu_kelurga" => $no_kartu_keluarga,
-                    "no_bpjs_kt" => $no_bpjs_kt,
-                    "no_bpjs_ks" => $no_bpjs_ks,
-                    "no_rek_payroll" => $no_rek_payroll,
+                    "no_npwp"          => $no_npwp,
+                    "no_kartu_keluarga" => $no_kartu_keluarga,
+                    "no_bpjs_kt"       => $no_bpjs_kt,
+                    "no_bpjs_ks"       => $no_bpjs_ks,
+                    "no_rek_payroll"   => $no_rek_payroll,
                     "bank_rek_payroll" => $bank_rek_payroll,
-                    "no_rek_dplk" => $no_rek_dplk,
-                    "bank_rek_dplk" => $bank_rek_dplk,
+                    "bank_rek_payroll_id" => $bank_rek_payroll_id,
+                    "no_rek_dplk"      => $no_rek_dplk,
+                    "bank_rek_dplk"    => $bank_rek_dplk,
+                    "bank_rek_dplk_id"    => $bank_rek_dplk_id,
 
-                    "pendidikan_terakhir" => $pendidikan,
-                    "program_studi" => $prog_studi,
+                    "pendidikan_id" => $pendidikan_id,
+                    "program_studi"       => $prog_studi,
 
-                    "nama_ibu" => $nama_ibu,
+                    "nama_ibu"            => $nama_ibu,
                     "nama_pasangan_hidup" => $nama_pasangan,
-                    "nama_anak_1" => $nama_anak_1,
-                    "nama_anak_2" => $nama_anak_2,
-                    "nama_anak_3" => $nama_anak_3,
+                    "nama_anak_1"         => $nama_anak_1,
+                    "nama_anak_2"         => $nama_anak_2,
+                    "nama_anak_3"         => $nama_anak_3,
 
                     "no_skk_1" => $no_skk1,
                     "no_skk_2" => $no_skk2,
 
-                    "update_tanggal" => $tgl_update,
-                    "update_oleh" => $user_id
+                    "keterangan" => $keterangan,
+
+                    "import_tanggal" => date('Y-m-d H:i:s'),
+                    "import_oleh" => $user_id
                 ];
 
                 // Save data to batch
                 $batchData[] = $imp_data;
             }
 
-            if ($stat_import == "") {
+            if ($cek_file_import == "OK") {
                 if (count($batchData) != 0) {
-                    $simpan = $dtTkTemp->insertBatchDataFromXls($batchData);
-                    $jml_import = $simpan;
-                    $ket_import = $jml_import . ' Data Kontrak berhasil di import.';
-                }
-            }
-
-            if ($stat_import != "") {
-                session()->setFlashdata('danger2', $stat_import);
-            } else {
-                if ($jml_import == 0) {
-                    if ($jmlTkSdhAda > 0) {
-                        session()->setFlashdata('warning', 'Proses Import Dibatalkan!!!<br>Data Kontrak sudah ada dalam database.<br>Silahkan cek kembali file excel yang telah di import.');
-                    } else if ($jmlTkTdkDitemukan > 0) {
-                        session()->setFlashdata('warning', 'Tidak ditemukan data kontrak pada file excel dari ' . $jmlTkTdkDitemukan . ' row data yang di import.');
-                    } else {
-                        session()->setFlashdata('warning', 'Data Kontrak tidak berhasil di import.<br>Silahkan cek kembali file excel yang telah di import.');
-                    }
-                } else {
+                    $simpan = $dtTenagakerjaTemp->insertBatchDataFromXls($batchData);
                     if ($simpan) {
-                        session()->setFlashdata('success', $ket_import);
+                        $jml_data_import = $simpan;
+                        if ($jml_data_import == 0) {
+                            session()->setFlashdata('warning', 'Data Tenaga kerja tidak berhasil di import.<br>Silahkan cek kembali file excel yang akan di import.');
+                        } else {
+                            $ket_hasil_validasi =  '<hr>' .
+                                'Jumlah data yang akan di import   : ' . $jml_data_import . ' Data Ditemukan<br><br>' .
+
+                                '- Data Baru      : ' . $jml_data_baru . ' Ditemukan.<br>' .
+                                '- Pembaruan Data : ' . $jml_data_updated . ' Ditemukan.<br><br>';
+
+                            if ($jml_data_gl == 0) {
+                                $ket_hasil_validasi .= 'Proses Validasi Data Selesai. <br> Silahkan lanjutkan dengan mengklik tombol "KOMFIRMASI" di akhir halaman ini.';
+                            } else {
+                                $ket_hasil_validasi .= 'Hasil validasi : ' . $jml_data_gl . ' Data tidak dapat di import.<br><br>';
+                                $ket_hasil_validasi .= 'FILE EXCEL TIDAK DAPAT DI IMPORT !!!<br><br> Cek kembali data pada file excel yang akan diimport.';
+                            }
+                            session()->setFlashdata('success-validation-import', $ket_hasil_validasi);
+                        }
+                    } else {
+                        session()->setFlashdata('danger2', 'Data Tenaga kerja tidak berhasil di import.<br>Silahkan cek kembali file excel yang akan di import.');
                     }
                 }
+            } else {
+                session()->setFlashdata('danger2', $cek_file_import);
             }
 
             return redirect()->to($redirectPath);
         }
+    }
+
+    public function proses_data_import_tk_xlsx()
+    {
+        $user_id = $this->user_id;
+
+        $batchImportData = array();
+        $batchUpdateData = array();
+
+        $batchImportDataDetail = array();
+        $batchUpdateDataDetail = array();
+
+        $jml_import = 0;
+        $jml_update = 0;
+
+        $redirectPath = '/tenagakerja_import_detail';
+
+        $filter_temp = ["import_oleh " => $user_id];
+        $dtTenagakerjaTemp = $this->dbHelper->getTenagakerjaTemporary($filter_temp);
+
+        foreach ($dtTenagakerjaTemp as $rowdata) {
+
+            $status_import = $rowdata['status_import'];
+            $validasi = $rowdata['validasi'];
+
+            $nip = $rowdata['nip'];
+            $kata_kunci = password_hash($nip, PASSWORD_BCRYPT);
+
+            if (strtoupper($status_import) == 'IMPORT DATA') {
+                if ($validasi == "Menunggu konfirmasi") {
+                    $imp_data = [
+                        "nip" => $nip,
+                        "nama" => $rowdata['nama'],
+                        "jabatan_id" => $rowdata['jabatan_id'],
+                        "unitkerja_id" => $rowdata['unitkerja_id'],
+                        "penempatan_id" => $rowdata['penempatan_id'],
+                        "wilayah_id" => $rowdata['wilayah_id'],
+                        "email" => $rowdata['email'],
+                        "kata_kunci" => $kata_kunci,
+                        "otoritas_id" => 4,
+                        "status_id" => 1,
+                        "apps_id" => 0
+                    ];
+
+                    // Save to batchdata
+                    $batchImportData[] = $imp_data;
+                }
+            } else if (strtoupper($status_import) == 'UPDATE DATA') {
+                if ($validasi == "Menunggu konfirmasi") {
+                    $upd_data = [
+                        "id" => $rowdata['tenagakerja_id'],
+                        "nip" => $nip,
+                        "nama" => $rowdata['nama'],
+                        "jabatan_id" => $rowdata['jabatan_id'],
+                        "unitkerja_id" => $rowdata['unitkerja_id'],
+                        "penempatan_id" => $rowdata['penempatan_id'],
+                        "wilayah_id" => $rowdata['wilayah_id'],
+                        "email" => $rowdata['email'],
+                        "kata_kunci" => $kata_kunci,
+                        "otoritas_id" => 4,
+                        "status_id" => 1,
+                        "apps_id" => 0
+                    ];
+
+                    // Save to batchdata
+                    $batchUpdateData[] = $upd_data;
+                }
+            }
+        }
+
+        if (count($batchImportData) != 0) {
+            $simpan = $this->dbTenagakerja->insertBatchDataFromXls($batchImportData);
+            $jml_import = $simpan;
+        }
+
+        if (count($batchUpdateData) != 0) {
+            $simpan_update = $this->dbTenagakerja->updateBatchDataFromXls($batchUpdateData);
+            $jml_update = $simpan_update;
+        }
+
+        //import data detail
+        foreach ($dtTenagakerjaTemp as $rowdata) {
+            $status_import = $rowdata['status_import'];
+            $validasi = $rowdata['validasi'];
+
+            $nip = $rowdata['nip'];
+            $dtTenagakerja = $this->dbHelper->getTenagakerjaIdByNIP($nip);
+            $pegawai_id = $dtTenagakerja->id;
+
+            $imp_data_detail = [
+                "pegawai_id" => $pegawai_id,
+                "no_identitas" => $rowdata['no_identitas'],
+                "tempat_lahir" => $rowdata['tempat_lahir'],
+                "tanggal_lahir" => $rowdata['tanggal_lahir'],
+                "jenis_kelamin" => $rowdata['jenis_kelamin'],
+                "alamat" => $rowdata['alamat'],
+                "telepon" => $rowdata['telepon'],
+                "pendidikan_id" => $rowdata['pendidikan_id'],
+                "program_studi" => $rowdata['program_studi'],
+            ];
+
+            if (strtoupper($status_import) == 'IMPORT DATA') {
+                if ($validasi == "Menunggu konfirmasi") {
+                    $batchImportDataDetail[] = $imp_data_detail;
+                }
+            } else if (strtoupper($status_import) == 'UPDATE DATA') {
+                if ($validasi == "Menunggu konfirmasi") {
+                    $batchUpdateDataDetail[] = $imp_data_detail;
+                }
+            }
+        }
+
+        if (count($batchImportDataDetail) != 0) {
+            $simpan_detail = $this->dbTenagakerjaDetail->insertBatchDataFromXls($batchImportDataDetail);
+        }
+
+        if (count($batchUpdateDataDetail) != 0) {
+            $simpan_update_detail = $this->dbTenagakerjaDetail->updateBatchDataFromXls($batchUpdateDataDetail);
+        }
+
+        //hapus data kontrak di tabel temporary jika sudah berhasil di import ke tabel utama
+        if ($jml_import != 0 || $jml_update != 0) {
+            $this->dbHelper->deleteTenagakerjaTemporary($filter_temp);
+        }
+
+        if (($jml_import + $jml_update) != 0) {
+            $ket_import =  '<hr>' .
+                'Jumlah data    : ' . $jml_import . '<br>' .
+                'Data Baru      : ' . $jml_import . ' Berhasil di import.<br>' .
+                'Pembaruan Data : ' . $jml_update . ' Berhasil di perbarui.<br><br>' .
+                'Proses Import Data Selesai.';
+            session()->setFlashdata('success-import', $ket_import);
+        }
+
+        return redirect()->to($redirectPath);
     }
 }

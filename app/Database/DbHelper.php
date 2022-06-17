@@ -87,13 +87,10 @@ class DbHelper
         return $builder->get()->getRow();
     }
 
-    public function getWilayahKerjaIdBySingkatan($singkatan)
+    public function getWilayahKerjaIdBySingkatan($key)
     {
         $builder = $this->builder('org__wilayahkerja');
-        $builder->select('id')
-            ->where('singkatan', $singkatan);
-
-        return $builder->get()->getResult();
+        return $builder->select('id')->getWhere(['singkatan' => $key])->getFirstRow();
     }
 
     /**--------------------------------------------------------------------
@@ -147,6 +144,12 @@ class DbHelper
         }
 
         return $builder->get()->getResultArray();
+    }
+
+    public function getUnitKerjaIdByNama($key)
+    {
+        $builder = $this->builder('org__unitkerja');
+        return $builder->select('id')->getWhere(['unitkerja' => $key])->getFirstRow();
     }
 
     /**
@@ -227,6 +230,22 @@ class DbHelper
         return $builder->get()->getRow();
     }
 
+    public function getMitrakerjaIdByNama($key)
+    {
+        $builder = $this->builder('org__mitrakerja');
+        return $builder->select('id')->getWhere(['mitrakerja' => $key])->getFirstRow();
+    }
+
+    /**--------------------------------------------------------------------
+     * HELPER FOR KONTRAK/PKS/SPK
+     * --------------------------------------------------------------------
+     */
+    public function getKontrakIdByNoP1($key)
+    {
+        $builder = $this->builder('pks__kontrak');
+        return $builder->select('id')->getWhere(['no_pks_p1' => $key])->getFirstRow();
+    }
+
     /**--------------------------------------------------------------------
      * HELPER FOR DATA PEGAWAI
      * --------------------------------------------------------------------
@@ -257,6 +276,17 @@ class DbHelper
         $retData = $builder->get()->getRow()->jml;
 
         return $retData;
+    }
+
+    /**--------------------------------------------------------------------
+     * HELPER FOR DATA JABATAN
+     * --------------------------------------------------------------------
+     */
+
+    public function getJabatanIdBySingkatan($key)
+    {
+        $builder = $this->builder('mkp__jabatan');
+        return $builder->select('id')->getWhere(['singkatan' => $key])->getFirstRow();
     }
 
     /**--------------------------------------------------------------------
@@ -357,6 +387,48 @@ class DbHelper
 
         return $retData;
     }
+
+    public function getTenagakerjaIdByNIP($key)
+    {
+        $builder = $this->builder('mkp__tenagakerja');
+        return $builder->select('id')->getWhere(['nip' => $key])->getFirstRow();
+    }
+
+    /**
+     * --------------------------------------------------------------------
+     * HELPER FOR TABEL TEMPORARY
+     * --------------------------------------------------------------------
+     */
+    public function deleteKontrakTemporary($filter)
+    {
+        $builder = $this->builder('pks__kontrak_temp');
+        $builder->where($filter)->delete();
+    }
+
+
+    public function getTenagakerjaTemporary($filter)
+    {
+        $builder = $this->builder('mkp__tenagakerja_temp a');
+
+        $builder->select('a.*, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, e.singkatan as wilayahkerja, f.no_pks_p1,g.jenjang as pendidikan_terakhir')
+            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
+            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
+            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
+            ->join('org__wilayahkerja e', 'a.wilayah_id=e.id', 'left')
+            ->join('pks__kontrak f', 'a.kontrak_pks_id=f.id', 'left')
+            ->join('oth__pendidikan g', 'a.pendidikan_id=g.id', 'left')
+            ->orderBy('a.id', 'asc');
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function deleteTenagakerjaTemporary($filter)
+    {
+        $builder = $this->builder('mkp__tenagakerja_temp');
+        $builder->where($filter)->delete();
+    }
+
+
 
     /**
      * --------------------------------------------------------------------
@@ -473,7 +545,7 @@ class DbHelper
         return $builder->countAllResults();
     }
 
-    //TENAGAKERJA
+    //PRESENSI TENAGAKERJA
     public function getPresensiTenagakerja($periode, $pekerja_id = null, $unit_id = null)
     {
         $blnkehadiran = explode("-", $periode);
@@ -617,6 +689,23 @@ class DbHelper
         }
 
         return $builder->get()->getResultArray();
+    }
+
+    /**
+     * --------------------------------------------------------------------
+     * HELPER DATA LAINNYA
+     * --------------------------------------------------------------------
+     */
+    public function getJenjangPendidikanByNama($key)
+    {
+        $builder = $this->builder('oth__pendidikan');
+        return $builder->select('id')->getWhere(['jenjang' => $key])->getFirstRow();
+    }
+
+    public function getBankIdBySingkatan($key)
+    {
+        $builder = $this->builder('oth__bank');
+        return $builder->select('id')->getWhere(['singkatan' => $key])->getFirstRow();
     }
 
     /**

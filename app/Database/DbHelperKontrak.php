@@ -72,13 +72,6 @@ class DbHelperKontrak
         return $builder->get()->getResultArray();
     }
 
-    public function deleteKontrakTemporary($filter)
-    {
-        $builder = $this->builder('pks__kontrak_temp');
-        $builder->where($filter);
-        $builder->delete();
-    }
-
     public function getKontrakIdByNoP1($key)
     {
         $builder = $this->builder('pks__kontrak');

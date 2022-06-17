@@ -21,15 +21,6 @@ class M_kontrak_temporary extends Model
         'import_tanggal', 'import_oleh'
     ];
 
-    public function getKontrakTemp($id = null)
-    {
-        if (is_null($id)) {
-            return $this->findAll();
-        } else {
-            return $this->find($id);
-        }
-    }
-
     public function insertBatchDataFromXls($data)
     {
         return $this->db->table($this->table)->insertBatch($data);

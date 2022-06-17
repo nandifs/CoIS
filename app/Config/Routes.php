@@ -79,7 +79,8 @@ $routes->post('/tenagakerja_delete/(:num)', 'Master\Tenagakerja::delete_by_ajax/
 
 // Tenaga Kerja Detail
 $routes->get('/tenagakerja_info_detail', 'Master\Tenagakerjadetail::info');
-$routes->get('/tenagakerja_daftar_detail', 'Master\Tenagakerjadetail::index');
+$routes->get('/tenagakerja_detail', 'Master\Tenagakerjadetail::index');
+$routes->get('/tenagakerja_daftar_detail', 'Master\Tenagakerjadetail::daftar_tenagakerja');
 
 $routes->get('/tenagakerja_add_detail', 'Master\Tenagakerjadetail::add');
 $routes->post('/tenagakerja_save_detail', 'Master\Tenagakerjadetail::save');
@@ -87,7 +88,8 @@ $routes->post('/tenagakerja_edit_detail', 'Master\Tenagakerjadetail::edit');
 $routes->post('/tenagakerja_update_detail', 'Master\Tenagakerjadetail::update');
 
 $routes->get('/tenagakerja_import_detail', 'Master\Tenagakerjadetail::import_tenagakerja');
-$routes->post('/tenagakerja_validasi_import_xls', 'Master\Tenagakerjadetail::validasi_data_import_tk_xlsx');
+$routes->post('/tenagakerja_detil_validasi_import_xls', 'Master\Tenagakerjadetail::validasi_data_import_tk_xlsx');
+$routes->post('/tenagakerja_detail_proses_import_xls', 'Master\Tenagakerjadetail::proses_data_import_tk_xlsx');
 
 
 // Ajax Tenaga Kerja

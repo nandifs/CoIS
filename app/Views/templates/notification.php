@@ -61,9 +61,9 @@
 <?php endif; ?>
 
 <?php if (session()->getFlashdata('success-validation-import')) : ?>
-    <div class="alert alert-success alert-dismissible mt-2">
+    <div class="alert alert-warning alert-dismissible mt-2">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <h4><i class="icon fa fa-check"></i> VALIDASI DATA SELESAI!</h4>
+        <h4><i class="icon fa fa-info"></i> VALIDASI DATA SELESAI!</h4>
         <?= session()->getFlashdata('success-validation-import'); ?>
     </div>
 <?php endif; ?>

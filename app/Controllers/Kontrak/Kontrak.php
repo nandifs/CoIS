@@ -3,6 +3,7 @@
 namespace App\Controllers\Kontrak;
 
 use App\Controllers\BaseController;
+use App\Database\DbHelper;
 use App\Database\DbHelperKontrak;
 use App\Models\KONTRAK\M_kontrak;
 use App\Models\KONTRAK\M_kontrak_amendemen;
@@ -10,10 +11,12 @@ use App\Models\KONTRAK\M_kontrak_temporary;
 
 class Kontrak extends BaseController
 {
+    protected $dbHelper;
     protected $dbHelperKontrak;
 
     public function __construct()
     {
+        $this->dbHelper = new DbHelper;
         $this->dbHelperKontrak = new DbHelperKontrak;
     }
     //--------------------------------------------------------------------
@@ -166,7 +169,7 @@ class Kontrak extends BaseController
 
         //hapus data kontrak di tabel temporary jika sudah ada data dengan user dan tanggal import yang sama
         $filter_kontrak = ["DATE(import_tanggal)" => $tgl_import, "import_oleh" => $user_id];
-        $this->dbHelperKontrak->deleteKontrakTemporary($filter_kontrak);
+        $this->dbHelper->deleteKontrakTemporary($filter_kontrak);
 
         $status_import = "Import Data";
 
@@ -548,7 +551,7 @@ class Kontrak extends BaseController
         //hapus data kontrak di tabel temporary jika sudah berhasil di import ke tabel utama
         if ($jml_import != 0 || $jml_update != 0) {
             $filter_kontrak = ["DATE(import_tanggal)" => $tgl_import, "import_oleh " => $user_id];
-            $this->dbHelperKontrak->deleteKontrakTemporary($filter_kontrak);
+            $this->dbHelper->deleteKontrakTemporary($filter_kontrak);
         }
 
         if (($jml_import + $jml_update) != 0) {

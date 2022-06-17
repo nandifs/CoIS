@@ -71,9 +71,13 @@ function ambil_tanggal_jam($fdate = null)
  */
 function ubah_tgl_etm($tanggal)
 {
-    $pisah = explode('/', $tanggal);
-    $larik = array($pisah[2], $pisah[0], $pisah[1]);
-    $satukan = implode('-', $larik);
+    if ($tanggal != "") {
+        $pisah = explode('/', $tanggal);
+        $larik = array($pisah[2], $pisah[0], $pisah[1]);
+        $satukan = implode('-', $larik);
+    } else {
+        $satukan = "";
+    }
 
     return $satukan;
 }
@@ -84,9 +88,13 @@ function ubah_tgl_etm($tanggal)
  **/
 function ubah_tgl_mte($tanggal)
 {
-    $pisah = explode('-', $tanggal);
-    $larik = array($pisah[1], $pisah[2], $pisah[0]);
-    $satukan = implode('/', $larik);
+    if ($tanggal != "") {
+        $pisah = explode('-', $tanggal);
+        $larik = array($pisah[1], $pisah[2], $pisah[0]);
+        $satukan = implode('/', $larik);
+    } else {
+        $satukan = "";
+    }
 
     return $satukan;
 }
@@ -97,10 +105,13 @@ function ubah_tgl_mte($tanggal)
  **/
 function ubah_tgl_itm($tanggal)
 {
-    $pisah = explode('/', $tanggal);
-    $larik = array($pisah[2], $pisah[1], $pisah[0]);
-    $satukan = implode('-', $larik);
-
+    if ($tanggal != "") {
+        $pisah = explode('/', $tanggal);
+        $larik = array($pisah[2], $pisah[1], $pisah[0]);
+        $satukan = implode('-', $larik);
+    } else {
+        $satukan = "";
+    }
     return $satukan;
 }
 
@@ -108,11 +119,15 @@ function ubah_tgl_itm($tanggal)
  * Dari MySQL to Indonesia 
  * -> yyyy-mm-dd ke dd/mm/yyyy 
  **/
-function ubah_tgl_mti($tanggal)
+function ubah_tgl_mti($tanggal, $saparator = "/")
 {
-    $pisah = explode('-', $tanggal);
-    $larik = array($pisah[2], $pisah[1], $pisah[0]);
-    $satukan = implode('/', $larik);
+    if ($tanggal != "") {
+        $pisah = explode('-', $tanggal);
+        $larik = array($pisah[2], $pisah[1], $pisah[0]);
+        $satukan = implode($saparator, $larik);
+    } else {
+        $satukan = "";
+    }
 
     return $satukan;
 }
