@@ -98,13 +98,13 @@ if ($page == "login") {
                     $page = '/pages/admin/jabatan/edit';
                     break;
 
-                case 'tenagakerja_detail':
+                case 'ketenagakerjaan_data_tengakerja':
                     $page = '/KETENAGAKERJAAN/tenagakerja/index';
                     break;
-                case 'tenagakerja_detail_daftar':
-                    $page = '/KETENAGAKERJAAN/tenagakerja/laporan_tenagakerja_detail';
+                case 'ketenagakerjaan_laporam':
+                    $page = '/KETENAGAKERJAAN/tenagakerja/laporan_tenagakerja';
                     break;
-                case 'tenagakerja_detail_info':
+                case 'ketenagakerjaan_info_tenagakerja':
                     $page = '/KETENAGAKERJAAN/tenagakerja/info';
                     break;
                 case 'tenagakerja_detail_add':

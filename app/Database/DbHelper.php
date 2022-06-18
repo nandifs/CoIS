@@ -311,26 +311,6 @@ class DbHelper
         return $dt_tenagakerja;
     }
 
-    public function getTenagakerjaDetailByNip($nip)
-    {
-        $builder = $this->builder('mkp__tenagakerja a');
-        $builder->select('a.*, g.status, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, e.singkatan as wilayahkerja, f.*')
-            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
-            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
-            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
-            ->join('org__wilayahkerja e', 'a.wilayah_id=e.id', 'left')
-            ->join('mkp__tenagakerja_detail f', 'a.id=f.pegawai_id', 'left')
-            ->join('mkp__tenagakerja_status g', 'a.status_id=g.id', 'left')
-            ->orderBy('c.singkatan, d.singkatan, b.tingkat', 'asc');
-
-        $dt_tenagakerja = $builder->where('a.nip', $nip)->get()->getFirstRow();
-
-        unset($dt_tenagakerja->pegawai_id);
-        unset($dt_tenagakerja->kata_kunci);
-
-        return $dt_tenagakerja;
-    }
-
     public function getTenagakerjaPenempatan($appId, $mitrakerja_id = null)
     {
         $builder = $this->builder('mkp__tenagakerja a');
@@ -394,6 +374,53 @@ class DbHelper
         return $builder->select('id')->getWhere(['nip' => $key])->getFirstRow();
     }
 
+    //KETENAGAKERJAAN
+    public function getDataKetenagakerjaanByNip($nip)
+    {
+        $builder = $this->builder('stv__ketenagakerjaan_data_tk a');
+        $builder->select('a.*, 
+                          g.status, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, 
+                          e.singkatan as wilayahkerja, f.*, h.jenjang as pendidikan_terakhir,
+                          i.agama, j.singkatan as bank_rek_payroll, k.singkatan as bank_rek_dplk,
+                          l.no_pks_p1, l.uraian_pekerjaan, m.mitrakerja as customer')
+            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
+            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
+            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
+            ->join('org__wilayahkerja e', 'a.wilayah_id=e.id', 'left')
+            ->join('mkp__tenagakerja_detail f', 'a.id=f.pegawai_id', 'left')
+            ->join('mkp__tenagakerja_status g', 'a.status_id=g.id', 'left')
+            ->join('oth__pendidikan h', 'f.pendidikan_id=h.id', 'left')
+            ->join('oth__agama i', 'f.agama_id=i.id', 'left')
+            ->join('oth__bank j', 'f.bank_rek_payroll_id=j.id', 'left')
+            ->join('oth__bank k', 'f.bank_rek_dplk_id=k.id', 'left')
+            ->join('pks__kontrak l', 'f.kontrak_pks_id=l.id', 'left')
+            ->join('org__mitrakerja m', 'l.customer_id=m.id', 'left')
+            ->orderBy('c.singkatan, d.singkatan, b.tingkat', 'asc');
+
+        $dt_tenagakerja = $builder->where('a.nip', $nip)->get()->getFirstRow();
+
+        unset($dt_tenagakerja->pegawai_id);
+        unset($dt_tenagakerja->kata_kunci);
+
+        return $dt_tenagakerja;
+    }
+
+    public function getKetenagakerjaanByPenempatan($mitrakerja_id = null)
+    {
+        $builder = $this->builder('mkp__tenagakerja a');
+        $builder->select('a.*, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan')
+            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
+            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
+            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
+            ->orderBy('c.singkatan, d.singkatan, b.tingkat', 'asc');
+
+        if (!is_null($mitrakerja_id) && $mitrakerja_id != 0) {
+            $builder->where("a.penempatan_id", $mitrakerja_id);
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
     /**
      * --------------------------------------------------------------------
      * HELPER FOR TABEL TEMPORARY
@@ -404,7 +431,6 @@ class DbHelper
         $builder = $this->builder('pks__kontrak_temp');
         $builder->where($filter)->delete();
     }
-
 
     public function getTenagakerjaTemporary($filter)
     {

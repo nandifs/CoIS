@@ -10,13 +10,13 @@ function initObjPageTenagakerjaInfoDetail() {
         if (nip != ""){            
             if (upd_id == "add"){
                 //window.location.href = "/tenagakerja_add_detail";
-                let url_get ="/tenagakerja_add_detail";                            
+                let url_get ="/ketenagakerjaan_tenagakerja_add";                            
                 sendGetData(url_get, nip, "nip");
             }else if(upd_id == "edit"){                                    
-                let url_post ="/tenagakerja_edit_detail";
+                let url_post ="/ketenagakerjaan_tenagakerja_edit";
                 sendPostData(url_post, nip, "nip");
             }else if(upd_id == "cari"){                                    
-                let url_get ="/tenagakerja_info_detail";
+                let url_get ="/ketenagakerjaan_info";
                 sendGetData(url_get, nip,"nip");
             }
         }else{            

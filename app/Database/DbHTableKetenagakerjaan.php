@@ -6,7 +6,7 @@ use App\Models\M_mitrakerja;
 use CodeIgniter\Database\BaseConnection;
 use Config\Database;
 
-class DbHelperTenagakerja
+class DbHTableKetenagakerjaan
 {
     protected $db;
     protected $table;
@@ -24,56 +24,48 @@ class DbHelperTenagakerja
     //set column field database for datatable orderable
     private $column_order = array(
         null,
-        'a.nip', 'a.nama',
-        'b.singkatan', 'c.singkatan',
-        'd.singkatan', 'e.singkatan',
-        'f.status'
+        'nip', 'nama',
+        'jabatan', 'unitkerja',
+        'penempatan', 'wilayahkerja',
+        'status'
     );
 
     //set column field database for datatable searchable 
     private $column_search = array(
-        'a.nip', 'a.nama',
-        'b.singkatan', 'c.singkatan',
-        'd.singkatan', 'e.singkatan',
-        'f.status'
+        'nip', 'nama',
+        'jabatan', 'unitkerja',
+        'penempatan', 'wilayahkerja',
+        'status'
     );
 
     // default order 
-    private $order = array('c.singkatan' => 'asc');
+    private $order = array('unitkerja' => 'asc');
 
-    private function tabel_tenagakerja($appId, $mitrakerja_id)
+    private function tabel_tenagakerja($mitrakerja_id)
     {
         $dbMitrakerja = new M_mitrakerja();
         $mitrakerja = $dbMitrakerja->getMitraKerja($mitrakerja_id);
 
-        $this->builder('mkp__tenagakerja a');
-        $this->builder->select('a.id, a.nip, a.nama, a.jabatan_id, a.unitkerja_id, a.penempatan_id, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, e.singkatan as wilayahkerja, f.status as status_tenagakerja')
-            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
-            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
-            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
-            ->join('org__wilayahkerja e', 'a.wilayah_id=e.id', 'left')
-            ->join('mkp__tenagakerja_status f', 'a.status_id=f.id', 'left')
-            ->orderBy('c.singkatan, d.singkatan, b.tingkat', 'asc');
+        $this->builder('stv__ketenagakerjaan_data_tk');
+        $this->builder->select('*')
+            ->orderBy('unitkerja, penempatan, tingkat_jabatan', 'asc');
 
         if ($mitrakerja['kelas'] == 1) {
             $kode_induk = substr($mitrakerja['kode'], 0, 3);
-            $this->builder->where('LEFT(d.kode,3)', $kode_induk);
+            $this->builder->where('LEFT(kode_penempatan,3)', $kode_induk);
         } else if ($mitrakerja['kelas'] == 2) {
             $kode_induk = substr($mitrakerja['kode'], 0, 6);
-            $this->builder->where('LEFT(d.kode,6)', $kode_induk);
+            $this->builder->where('LEFT(kode_penempatan,6)', $kode_induk);
         } else {
             if (!is_null($mitrakerja_id) && $mitrakerja_id != 0) {
-                $this->builder->where("a.penempatan_id", $mitrakerja_id);
+                $this->builder->where("penempatan_id", $mitrakerja_id);
             }
-        }
-        if ($appId != "40") {
-            $this->builder->where("a.apps_id", $appId);
         }
     }
 
-    private function _get_query($appId, $mitrakerja_id)
+    private function _get_query($mitrakerja_id)
     {
-        $this->tabel_tenagakerja($appId, $mitrakerja_id);
+        $this->tabel_tenagakerja($mitrakerja_id);
 
         $i = 0;
         foreach ($this->column_search as $item) { // loop column 
@@ -99,9 +91,9 @@ class DbHelperTenagakerja
         }
     }
 
-    public function getForTabelTenagakerja($appId, $mitrakerja_id)
+    public function getForTabelTenagakerja($mitrakerja_id)
     {
-        $this->_get_query($appId, $mitrakerja_id);
+        $this->_get_query($mitrakerja_id);
         if ($_POST['length'] != -1)
             $this->builder->limit($_POST['length'], $_POST['start']);
 
@@ -110,16 +102,16 @@ class DbHelperTenagakerja
         return $query->getResult();
     }
 
-    public function count_filtered($appId, $mitrakerja_id)
+    public function count_filtered($mitrakerja_id)
     {
-        $this->_get_query($appId, $mitrakerja_id);
+        $this->_get_query($mitrakerja_id);
         $query = $this->builder->countAllResults();
         return $query;
     }
 
-    public function count_all($appId, $mitrakerja_id)
+    public function count_all($mitrakerja_id)
     {
-        $this->tabel_tenagakerja($appId, $mitrakerja_id);
+        $this->tabel_tenagakerja($mitrakerja_id);
         return $this->builder->countAllResults();
     }
 

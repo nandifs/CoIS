@@ -3,9 +3,10 @@
 var tblTenagakerja;
 
 function initTblTenagakerja() {
-  let url_link = "ajax_gettenagakerjadetail";
+  let url_link = "ajax_getdatatenagakerja";
 
-  tblTenagakerja = $("#tbl-tenagakerja").DataTable({
+  tblTenagakerja = $("#tbl-tenagakerja").DataTable({    
+    scrollX: true,
     processing: true, //Feature control the processing indicator.
     serverSide: true, //Feature control DataTables' server-side processing mode.
     order: [], //Initial no order.
@@ -15,7 +16,7 @@ function initTblTenagakerja() {
       url: url_link,
       type: "POST",
       data: function (d) {
-        d.data_id = $("#dt-akses").val();        
+        d.data_id = $("#dt-akses").val();
       },
     },
 
@@ -24,7 +25,7 @@ function initTblTenagakerja() {
       {
         targets: [0], //first column / numbering column
         orderable: false, //set not orderable
-      },
+      }      
     ],
   });
 }

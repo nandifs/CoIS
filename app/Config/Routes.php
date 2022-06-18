@@ -91,11 +91,11 @@ $routes->post('/ketenagakerjaan_tenagakerja_save', 'Ketenagakerjaan\Tenagakerja:
 $routes->post('/ketenagakerjaan_tenagakerja_edit', 'Ketenagakerjaan\Tenagakerja::edit');
 $routes->post('/ketenagakerjaan_tenagakerja_update', 'Ketenagakerjaan\Tenagakerja::update');
 
-$routes->get('/ketenagakerjaan_import_tenagakerja', 'Ketenagakerjaan\Tenagakerja::import_tenagakerja');
-$routes->post('/ketenagakerjaan_validasi_import_tenagakerja_xls', 'Ketenagakerjaan\Tenagakerja::validasi_data_import_tk_xlsx');
-$routes->post('/ketenagakerjaan_proses_import_tenagakerja_xls', 'Ketenagakerjaan\Tenagakerja::proses_data_import_tk_xlsx');
+$routes->get('/ketenagakerjaan_import_tenagakerja', 'Ketenagakerjaan\Importexport::import_tenagakerja');
+$routes->post('/ketenagakerjaan_validasi_import_tenagakerja_xls', 'Ketenagakerjaan\Importexport::validasi_data_import_tk_xlsx');
+$routes->post('/ketenagakerjaan_proses_import_tenagakerja_xls', 'Ketenagakerjaan\Importexport::proses_data_import_tk_xlsx');
 
-$routes->post('/ajax_gettenagakerjadetail', 'Master\Tenagakerjadetail::ajax_get_data_tenagakerjadetail');
+$routes->post('/ajax_getdatatenagakerja', 'Ketenagakerjaan\Tenagakerja::ajax_get_data_tenagakerja');
 
 //Hak Normatif
 $routes->get('/ketenagakerjaan_upah', 'Master\Tenagakerjahaknormatif::upah');

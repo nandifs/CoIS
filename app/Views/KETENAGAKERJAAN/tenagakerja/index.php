@@ -8,7 +8,7 @@
                             <?= form_open('/tenagakerja_add', ['class' => 'form-horizontal']); ?>
                             <div class="form-group row">
                                 <label for="input1" class="col-sm-2 col-form-label">Data Mitra Kerja</label>
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     <select class="form-control select2" id="dt-akses" name='dtakses'>
                                         <?php foreach ($dtMitraKerja as $mitra) {
                                             $space = "";
@@ -48,10 +48,11 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="tbl-tenagakerja" class="table table-bordered">
+                            <table id="tbl-tenagakerja" class="table table-bordered display nowrap">
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">NO</th>
+                                        <th style="text-align: center;">Aksi</th>
                                         <th>STATUS</th>
                                         <th>NIP</th>
                                         <th>NAMA</th>
@@ -59,6 +60,42 @@
                                         <th>UNIT KERJA</th>
                                         <th>PENEMPATAN</th>
                                         <th>WILAYAH</th>
+
+                                        <th>NO PKS</th>
+                                        <th>NO PKWT/PKWTT</th>
+                                        <th>TGL AWAL</th>
+                                        <th>TGL AKHIR</th>
+
+                                        <th>NO IDENTITAS/KTP</th>
+                                        <th>TMP LAHIR </th>
+                                        <th>TGL LAHIR</th>
+                                        <th>JNS KEL.</th>
+                                        <th>AGAMA</th>
+                                        <th>ALAMAT</th>
+                                        <th>TELEPON</th>
+                                        <th>PENDIDIKAN</th>
+                                        <th>PROG. STUDI</th>
+
+                                        <th>BANK REK. PAYROL</th>
+                                        <th>NO. REK. PAYROL</th>
+                                        <th>NO. BPJS KT</th>
+                                        <th>NO. BPJS KS</th>
+                                        <th>BANK REK DPLK</th>
+                                        <th>NO. REK DPLK</th>
+
+                                        <th>NO NPWP</th>
+
+                                        <th>NO. K. KELUARGA </th>
+                                        <th>NAMA IBU KANDUNG</th>
+                                        <th>NAMA PASANGAN</th>
+                                        <th>NAMA ANAK KE 1</th>
+                                        <th>NAMA ANAK KE 2</th>
+                                        <th>NAMA ANAK KE 3</th>
+
+                                        <th>NO. SKK 1</th>
+                                        <th>NO. SKK 2</th>
+
+                                        <th>KETERANGAN</th>
                                         <th style="text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>
