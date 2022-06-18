@@ -30,7 +30,7 @@
                     $icon = $menu['menu_icon'];
 
                     if ($link == "" && $level == 0) {
-                        createMenuItem($title, $link, $icon);
+                        createMenuItem($title, $menu_id, $icon);
                     }
 
                     //is treeview

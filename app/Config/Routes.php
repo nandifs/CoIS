@@ -96,6 +96,9 @@ $routes->post('/tenagakerja_detail_proses_import_xls', 'Master\Tenagakerjadetail
 $routes->post('/ajax_gettenagakerja', 'Master\Tenagakerja::ajax_get_data_tenagakerja');
 $routes->post('/ajax_gettenagakerjadetail', 'Master\Tenagakerjadetail::ajax_get_data_tenagakerjadetail');
 
+//Hak Normatif
+$routes->get('/tenagakerja_bpjs_kt', 'Master\Tenagakerjahaknormatif::bpjs_kt');
+
 // Jabatan
 $routes->get('/jabatan', 'Master\Jabatan::index');
 $routes->get('/jabatan_edit/(:num)', 'Master\Jabatan::edit/$1');

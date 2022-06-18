@@ -117,6 +117,10 @@ if ($page == "login") {
                     $page = '/pages/admin/tenagakerja/detail/import_detail';
                     break;
 
+                case 'tenagakerja_detail':
+                    $page = '/pages/admin/tenagakerja/detail/index';
+                    break;
+
                 case 'kontrak_pks':
                     $page = "/$appName/backoffice/kontrak/index";
                     break;

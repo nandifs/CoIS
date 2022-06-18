@@ -86,10 +86,10 @@ function addZeroSpaces($text, $title = null, $length = 0)
     }
 }
 
-function createMenuItem($title, $link, $icon)
+function createMenuItem($title, $menu_id, $icon)
 {
     echo "<li class='nav-item'>
-            <a href='$link' class='nav-link'>
+            <a href='/menu/" . $menu_id . "' class='nav-link'>
                 <i class='nav-icon $icon'></i>
                 <p>$title</p>
             </a>
