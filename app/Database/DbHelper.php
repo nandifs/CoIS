@@ -696,6 +696,13 @@ class DbHelper
      * HELPER DATA LAINNYA
      * --------------------------------------------------------------------
      */
+    public function getAgamaIdByNama($key)
+    {
+        $builder = $this->builder('oth__agama');
+        return $builder->select('id')->getWhere(['agama' => $key])->getFirstRow();
+    }
+
+
     public function getJenjangPendidikanByNama($key)
     {
         $builder = $this->builder('oth__pendidikan');

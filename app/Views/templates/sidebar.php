@@ -29,6 +29,10 @@
                     $level = $menu['menu_level'];
                     $icon = $menu['menu_icon'];
 
+                    if ($link == "HEADER") {
+                        createMenuHeader($title);
+                    }
+
                     if ($link == "" && $level == 0) {
                         createMenuItem($title, $menu_id, $icon);
                     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Master;
+namespace App\Controllers\Ketenagakerjaan;
 
 use App\Controllers\BaseController;
 
@@ -12,7 +12,7 @@ use App\Models\M_tenagakerja;
 use App\Models\M_tenagakerja_detail;
 use App\Models\M_tenagakerja_temporary;
 
-class Tenagakerjadetail extends BaseController
+class Tenagakerja extends BaseController
 {
     protected $dbHelper;
     protected $dbTenagakerja;
@@ -496,7 +496,7 @@ class Tenagakerjadetail extends BaseController
         $file = $this->request->getFile('imp_file');
         $datafile = array('imp_file' => $file);
 
-        $redirectPath = '/tenagakerja_import_detail';
+        $redirectPath = '/ketenagakerjaan_import_tenagakerja';
 
         if ($validation->run($datafile, 'import_excel') == FALSE) {
             session()->setFlashdata('errors', $validation->getErrors());
@@ -526,7 +526,7 @@ class Tenagakerjadetail extends BaseController
                 //Jika panjang kolom tidak sesuai berarti salah file import
                 if ($row_number == 0) {
                     $cek_cols = count($row);
-                    if ($cek_cols != 63) {
+                    if ($cek_cols != 64) {
                         $cek_file_import = "GAGAL IMPORT DATA TENAGA KERJA: Kolom file import tidak sesuai. Proses import dibatalkan.";
                         break;
                     }
@@ -545,7 +545,7 @@ class Tenagakerjadetail extends BaseController
                 $validasi = array();
 
                 //cek and get kontrak id from kolom no pks
-                $no_pks = trim($row[10]);
+                $no_pks = trim($row[11]);
                 $kontrak_pks = $this->dbHelper->getKontrakIdByNoP1($no_pks);
                 $kontrak_pks_id = (is_null($kontrak_pks)) ? 0 : $kontrak_pks->id;
 
@@ -565,23 +565,35 @@ class Tenagakerjadetail extends BaseController
                 $tgl_lahir = ubah_tgl_itm(trim($row[4]));
 
                 $no_identitas = trim($row[5]);
-                $jns_kel = trim($row[6]);
-                $alamat = trim($row[7]);
-                $telepon = trim($row[8]);
-                $email = trim($row[9]);
+                $jns_kel = strtoupper(trim($row[6]));
+                $agama = strtoupper(trim($row[7]));
+                $alamat = trim($row[8]);
+                $telepon = trim($row[9]);
+                $email = trim($row[10]);
 
-                $no_pkwt = trim($row[11]);
-                $tgl_awal = ubah_tgl_itm(trim($row[12]));
-                $tgl_akhir = ubah_tgl_itm(trim($row[13]));
+                if ($jns_kel == "PRIA" || $jns_kel == "LAKI-LAKI" || $jns_kel == "LAKI LAKI") {
+                    $jns_kelamin = "L";
+                } else if ($jns_kel == "PEREMPUAN" || $jns_kel == "WANITA") {
+                    $jns_kelamin = "P";
+                } else {
+                    $jns_kelamin = "-";
+                }
+
+                $dtAgama = $this->dbHelper->getAgamaIdByNama($agama);
+                $agama_id = (is_null($dtAgama)) ? 0 : $dtAgama->id;
+
+                $no_pkwt = trim($row[12]);
+                $tgl_awal = ubah_tgl_itm(trim($row[13]));
+                $tgl_akhir = ubah_tgl_itm(trim($row[14]));
 
                 //cek tanggal awal dan tanggal akhir pkwt/pkwtt
 
-                $jabatan = trim($row[14]);
-                $wil_kerja = trim($row[15]);
-                $unit_kerja = trim($row[16]);
-                $mitra_kerja = trim($row[17]);
-                $penempatan = $mitra_kerja . " " . trim($row[18]);
-                $keterangan = trim($row[19]);
+                $jabatan = trim($row[15]);
+                $wil_kerja = trim($row[16]);
+                $unit_kerja = trim($row[17]);
+                $mitra_kerja = trim($row[18]);
+                $penempatan = $mitra_kerja . " " . trim($row[19]);
+                $keterangan = trim($row[20]);
 
 
                 //cek and get id jabatan, wil_kerja, unitkerja, mitrakerja dan penempatan                
@@ -597,14 +609,21 @@ class Tenagakerjadetail extends BaseController
                 $penempatan_id = (is_null($dtPenempatan)) ? 0 : $dtPenempatan->id;
                 $wilayah_id = (is_null($dtWilayah)) ? 0 : $dtWilayah->id;
 
-                $no_npwp = trim($row[20]);
-                $no_kartu_keluarga = trim($row[21]);
-                $no_bpjs_kt = trim($row[22]);
-                $no_bpjs_ks = trim($row[23]);
-                $no_rek_payroll = trim($row[24]);
-                $bank_rek_payroll = trim($row[25]);
-                $no_rek_dplk = trim($row[26]);
-                $bank_rek_dplk = trim($row[27]);
+                $no_npwp = trim($row[21]);
+                $no_kartu_keluarga = trim($row[22]);
+                $no_bpjs_kt = trim($row[23]);
+                $no_bpjs_ks = trim($row[24]);
+                $no_rek_payroll = trim($row[25]);
+                $bank_rek_payroll = trim($row[26]);
+                $no_rek_dplk = trim($row[27]);
+                $bank_rek_dplk = trim($row[28]);
+
+                $no_npwp = ($no_npwp != "") ? str_replace("'", "", $no_npwp) : "";
+                $no_kartu_keluarga = ($no_kartu_keluarga != "") ? str_replace("'", "", $no_kartu_keluarga) : "";
+                $no_bpjs_kt = ($no_bpjs_kt != "") ? str_replace("'", "", $no_bpjs_kt) : "";
+                $no_bpjs_ks = ($no_bpjs_ks != "") ? str_replace("'", "", $no_bpjs_ks) : "";
+                $no_rek_payroll = ($no_rek_payroll != "") ? str_replace("'", "", $no_rek_payroll) : "";
+                $no_rek_dplk = ($no_rek_dplk != "") ? str_replace("'", "", $no_rek_dplk) : "";
 
                 $dtBankPayroll = $this->dbHelper->getBankIdBySingkatan($bank_rek_payroll);
                 $dtBankDPLK = $this->dbHelper->getBankIdBySingkatan($bank_rek_dplk);
@@ -612,7 +631,7 @@ class Tenagakerjadetail extends BaseController
                 $bank_rek_payroll_id =  (is_null($dtBankPayroll)) ? 0 : $dtBankPayroll->id;
                 $bank_rek_dplk_id =  (is_null($dtBankDPLK)) ? 0 : $dtBankDPLK->id;
 
-                $pendidikan = trim($row[28]);
+                $pendidikan = trim($row[29]);
 
                 $pendidikan = ($pendidikan == "STM") ? "SMK" : $pendidikan;
                 $pendidikan = ($pendidikan == "SMU") ? "SLTA" : $pendidikan;
@@ -620,16 +639,16 @@ class Tenagakerjadetail extends BaseController
                 $dtPendidikan = $this->dbHelper->getJenjangPendidikanByNama($pendidikan);
                 $pendidikan_id =  (is_null($dtPendidikan)) ? 0 : $dtPendidikan->id;
 
-                $prog_studi = trim($row[29]);
+                $prog_studi = trim($row[30]);
 
-                $nama_ibu = trim($row[30]);
-                $nama_pasangan = trim($row[31]);
-                $nama_anak_1 = trim($row[32]);
-                $nama_anak_2 = trim($row[33]);
-                $nama_anak_3 = trim($row[34]);
+                $nama_ibu = trim($row[31]);
+                $nama_pasangan = trim($row[32]);
+                $nama_anak_1 = trim($row[33]);
+                $nama_anak_2 = trim($row[34]);
+                $nama_anak_3 = trim($row[35]);
 
-                $no_skk1 = trim($row[35]);
-                $no_skk2 = trim($row[36]);
+                $no_skk1 = trim($row[36]);
+                $no_skk2 = trim($row[37]);
 
                 //Validasi data import
                 if (is_null($kontrak_pks_id)) {
@@ -660,6 +679,14 @@ class Tenagakerjadetail extends BaseController
                     $validasi[] = "- Data Bank Rek DPLK tidak ditemukan";
                 }
 
+                if (is_null($dtAgama)) {
+                    $validasi[] = "- Agama '$agama' tidak ditemukan";
+                }
+
+                if ($jns_kelamin == "-") {
+                    $validasi[] = "- Jenis kelamin '$jns_kel' tidak ditemukan. Gunakan 'LAKI-LAKI/PEREMPUAN'";
+                }
+
                 if (is_null($dtPendidikan)) {
                     $validasi[] = "- Jenjang Pendidikan '$pendidikan' tidak ditemukan";
                 }
@@ -684,7 +711,8 @@ class Tenagakerjadetail extends BaseController
                     "no_identitas"  => $no_identitas,
                     "tempat_lahir"  => $tmp_lahir,
                     "tanggal_lahir" => $tgl_lahir,
-                    "jenis_kelamin" => $jns_kel,
+                    "jenis_kelamin" => $jns_kelamin,
+                    "agama_id" => $agama_id,
                     "alamat"  => $alamat,
                     "telepon" => $telepon,
                     "email"   => $email,
@@ -779,7 +807,7 @@ class Tenagakerjadetail extends BaseController
         $jml_import = 0;
         $jml_update = 0;
 
-        $redirectPath = '/tenagakerja_import_detail';
+        $redirectPath = '/ketenagakerjaan_import_tenagakerja';
 
         $filter_temp = ["import_oleh " => $user_id];
         $dtTenagakerjaTemp = $this->dbHelper->getTenagakerjaTemporary($filter_temp);
@@ -805,7 +833,10 @@ class Tenagakerjadetail extends BaseController
                         "kata_kunci" => $kata_kunci,
                         "otoritas_id" => 4,
                         "status_id" => 1,
-                        "apps_id" => 0
+                        "apps_id" => 0,
+                        "created_at" => date('Y-m-d H:i:s'),
+                        "updated_at" => date('Y-m-d H:i:s'),
+                        "updated_from" => "I"
                     ];
 
                     // Save to batchdata
@@ -825,7 +856,9 @@ class Tenagakerjadetail extends BaseController
                         "kata_kunci" => $kata_kunci,
                         "otoritas_id" => 4,
                         "status_id" => 1,
-                        "apps_id" => 0
+                        "apps_id" => 0,
+                        "updated_at" => date('Y-m-d H:i:s'),
+                        "updated_from" => "I",
                     ];
 
                     // Save to batchdata
@@ -859,10 +892,35 @@ class Tenagakerjadetail extends BaseController
                 "tempat_lahir" => $rowdata['tempat_lahir'],
                 "tanggal_lahir" => $rowdata['tanggal_lahir'],
                 "jenis_kelamin" => $rowdata['jenis_kelamin'],
+                "agama_id" => $rowdata['agama_id'],
                 "alamat" => $rowdata['alamat'],
                 "telepon" => $rowdata['telepon'],
                 "pendidikan_id" => $rowdata['pendidikan_id'],
                 "program_studi" => $rowdata['program_studi'],
+
+                "no_pkwt"       => $rowdata['no_pkwt'],
+                "tanggal_awal"  => $rowdata['tanggal_awal'],
+                "tanggal_akhir" => $rowdata['tanggal_akhir'],
+
+                "no_npwp"          => $rowdata['no_npwp'],
+                "no_kartu_keluarga" => $rowdata['no_kartu_keluarga'],
+                "no_bpjs_kt"       => $rowdata['no_bpjs_kt'],
+                "no_bpjs_ks"       => $rowdata['no_bpjs_ks'],
+                "no_rek_payroll"   => $rowdata['no_rek_payroll'],
+                "bank_rek_payroll_id" => $rowdata['bank_rek_payroll_id'],
+                "no_rek_dplk"      => $rowdata['no_rek_dplk'],
+                "bank_rek_dplk_id"    => $rowdata['bank_rek_dplk_id'],
+
+                "nama_ibu"            => $rowdata['nama_ibu'],
+                "nama_pasangan_hidup" => $rowdata['nama_pasangan_hidup'],
+                "nama_anak_1"         => $rowdata['nama_anak_1'],
+                "nama_anak_2"         => $rowdata['nama_anak_2'],
+                "nama_anak_3"         => $rowdata['nama_anak_3'],
+
+                "no_skk_1" => $rowdata['no_skk_1'],
+                "no_skk_2" => $rowdata['no_skk_2'],
+
+                "keterangan" => $rowdata['keterangan'],
             ];
 
             if (strtoupper($status_import) == 'IMPORT DATA') {

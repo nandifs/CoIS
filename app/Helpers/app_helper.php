@@ -96,6 +96,10 @@ function createMenuItem($title, $menu_id, $icon)
           </li>";
 }
 
+function createMenuHeader($title)
+{
+    echo "<li class='nav-header'>$title</li>";
+}
 function createMenuTree($title, $link, $icon, $arr_menu, $parent_id, $sel_menu)
 {
     echo "<li class='nav-item " . (($sel_menu['menu_parent'] == $parent_id || $sel_menu['menu_parent_top'] == $parent_id) ? "menu-open" : "") . "'>";

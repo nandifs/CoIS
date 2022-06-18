@@ -99,26 +99,30 @@ if ($page == "login") {
                     break;
 
                 case 'tenagakerja_detail':
-                    $page = '/KETENAGAKERJAAN/admin/tenagakerja/detail/index';
+                    $page = '/KETENAGAKERJAAN/tenagakerja/index';
                     break;
                 case 'tenagakerja_detail_daftar':
-                    $page = '/pages/admin/tenagakerja/detail/laporan_tenagakerja_detail';
+                    $page = '/KETENAGAKERJAAN/tenagakerja/laporan_tenagakerja_detail';
                     break;
                 case 'tenagakerja_detail_info':
-                    $page = '/pages/admin/tenagakerja/detail/info';
+                    $page = '/KETENAGAKERJAAN/tenagakerja/info';
                     break;
                 case 'tenagakerja_detail_add':
-                    $page = '/pages/admin/tenagakerja/detail/add_detail';
+                    $page = '/KETENAGAKERJAAN/tenagakerja/add_detail';
                     break;
                 case 'tenagakerja_detail_edit':
-                    $page = '/pages/admin/tenagakerja/detail/edit_detail';
+                    $page = '/KETENAGAKERJAAN/tenagakerja/edit_detail';
                     break;
                 case 'tenagakerja_detail_import':
-                    $page = '/pages/admin/tenagakerja/detail/import_detail';
+                    $page = '/KETENAGAKERJAAN/tenagakerja/import_detail';
                     break;
 
-                case 'tenagakerja_detail':
-                    $page = '/pages/admin/tenagakerja/detail/index';
+                case 'tenagakerja_bpjs_kt':
+                    $page = '/KETENAGAKERJAAN/hak_normatif/bpjs_kt/index';
+                    break;
+
+                case 'tenagakerja_upah':
+                    $page = '/KETENAGAKERJAAN/hak_normatif/upah/index';
                     break;
 
                 case 'kontrak_pks':

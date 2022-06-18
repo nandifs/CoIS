@@ -77,27 +77,29 @@ $routes->post('/tenagakerja_save', 'Master\Tenagakerja::save');
 $routes->post('/tenagakerja_update', 'Master\Tenagakerja::update');
 $routes->post('/tenagakerja_delete/(:num)', 'Master\Tenagakerja::delete_by_ajax/$1');
 
-// Tenaga Kerja Detail
-$routes->get('/tenagakerja_info_detail', 'Master\Tenagakerjadetail::info');
-$routes->get('/tenagakerja_detail', 'Master\Tenagakerjadetail::index');
-$routes->get('/tenagakerja_daftar_detail', 'Master\Tenagakerjadetail::laporan');
-
-$routes->get('/tenagakerja_add_detail', 'Master\Tenagakerjadetail::add');
-$routes->post('/tenagakerja_save_detail', 'Master\Tenagakerjadetail::save');
-$routes->post('/tenagakerja_edit_detail', 'Master\Tenagakerjadetail::edit');
-$routes->post('/tenagakerja_update_detail', 'Master\Tenagakerjadetail::update');
-
-$routes->get('/tenagakerja_import_detail', 'Master\Tenagakerjadetail::import_tenagakerja');
-$routes->post('/tenagakerja_detil_validasi_import_xls', 'Master\Tenagakerjadetail::validasi_data_import_tk_xlsx');
-$routes->post('/tenagakerja_detail_proses_import_xls', 'Master\Tenagakerjadetail::proses_data_import_tk_xlsx');
-
-
 // Ajax Tenaga Kerja
 $routes->post('/ajax_gettenagakerja', 'Master\Tenagakerja::ajax_get_data_tenagakerja');
+
+// Ketenagakerjaan
+$routes->get('/ketenagakerjaan_data', 'Ketenagakerjaan\Tenagakerja::index');
+$routes->get('/ketenagakerjaan_info', 'Ketenagakerjaan\Tenagakerja::info');
+
+$routes->get('/ketenagakerjaan_laporan', 'Ketenagakerjaan\Tenagakerja::laporan');
+
+$routes->get('/ketenagakerjaan_tenagakerja_add', 'Ketenagakerjaan\Tenagakerja::add');
+$routes->post('/ketenagakerjaan_tenagakerja_save', 'Ketenagakerjaan\Tenagakerja::save');
+$routes->post('/ketenagakerjaan_tenagakerja_edit', 'Ketenagakerjaan\Tenagakerja::edit');
+$routes->post('/ketenagakerjaan_tenagakerja_update', 'Ketenagakerjaan\Tenagakerja::update');
+
+$routes->get('/ketenagakerjaan_import_tenagakerja', 'Ketenagakerjaan\Tenagakerja::import_tenagakerja');
+$routes->post('/ketenagakerjaan_validasi_import_tenagakerja_xls', 'Ketenagakerjaan\Tenagakerja::validasi_data_import_tk_xlsx');
+$routes->post('/ketenagakerjaan_proses_import_tenagakerja_xls', 'Ketenagakerjaan\Tenagakerja::proses_data_import_tk_xlsx');
+
 $routes->post('/ajax_gettenagakerjadetail', 'Master\Tenagakerjadetail::ajax_get_data_tenagakerjadetail');
 
 //Hak Normatif
-$routes->get('/tenagakerja_bpjs_kt', 'Master\Tenagakerjahaknormatif::bpjs_kt');
+$routes->get('/ketenagakerjaan_upah', 'Master\Tenagakerjahaknormatif::upah');
+$routes->get('/ketenagakerjaan_bpjs_kt', 'Master\Tenagakerjahaknormatif::bpjs_kt');
 
 // Jabatan
 $routes->get('/jabatan', 'Master\Jabatan::index');

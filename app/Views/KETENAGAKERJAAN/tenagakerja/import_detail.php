@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="card card-outline card-primary mt-2">
                     <div class="card-body pb-0">
-                        <?= form_open_multipart('/tenagakerja_validasi_import_xls', ['class' => 'form-horizontal']); ?>
+                        <?= form_open_multipart('/ketenagakerjaan_validasi_import_tenagakerja_xls', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">
                             <label for="imp_data" class="col-sm-1.1 col-form-label">Import Data : </label>
                             <div class="col-sm-3">
@@ -132,7 +132,7 @@
                 </div>
                 <div class="card card-outline card-warning mt-2 <?= (empty($dtTenagakerjaTemp)) ? "d-none" : ""; ?>">
                     <div class="card-body pb-0">
-                        <?= form_open_multipart('/tenagakerja_detail_proses_import_xls', ['class' => 'form-horizontal']); ?>
+                        <?= form_open_multipart('/ketenagakerjaan_proses_import_tenagakerja_xls', ['class' => 'form-horizontal']); ?>
                         <div class="form-group row">
                             <div class="col-sm-12">
                                 <div class="panel panel-default text-right">

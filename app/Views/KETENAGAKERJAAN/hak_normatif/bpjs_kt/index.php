@@ -72,7 +72,5 @@
             </div>
         </div>
         <!-- /.container-fluid -->
-
-        <?php include "modal_import.php"; ?>
     </section>
     <!-- /.content -->
