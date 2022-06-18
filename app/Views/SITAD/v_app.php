@@ -99,7 +99,7 @@ if ($page == "login") {
                     break;
 
                 case 'tenagakerja_detail':
-                    $page = '/pages/admin/tenagakerja/detail/index';
+                    $page = '/KETENAGAKERJAAN/admin/tenagakerja/detail/index';
                     break;
                 case 'tenagakerja_detail_daftar':
                     $page = '/pages/admin/tenagakerja/detail/laporan_tenagakerja_detail';
