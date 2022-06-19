@@ -73,8 +73,6 @@
                                         <th>AGAMA</th>
                                         <th>ALAMAT</th>
                                         <th>TELEPON</th>
-                                        <th>PENDIDIKAN</th>
-                                        <th>PROG. STUDI</th>
 
                                         <th>BANK REK. PAYROL</th>
                                         <th>NO. REK. PAYROL</th>
@@ -83,8 +81,6 @@
                                         <th>BANK REK DPLK</th>
                                         <th>NO. REK DPLK</th>
 
-                                        <th>NO NPWP</th>
-
                                         <th>NO. K. KELUARGA </th>
                                         <th>NAMA IBU KANDUNG</th>
                                         <th>NAMA PASANGAN</th>
@@ -92,8 +88,12 @@
                                         <th>NAMA ANAK KE 2</th>
                                         <th>NAMA ANAK KE 3</th>
 
+                                        <th>PENDIDIKAN</th>
+                                        <th>PROG. STUDI</th>
                                         <th>NO. SKK 1</th>
                                         <th>NO. SKK 2</th>
+
+                                        <th>NO NPWP</th>
 
                                         <th>KETERANGAN</th>
                                         <th style="text-align: center;">Aksi</th>

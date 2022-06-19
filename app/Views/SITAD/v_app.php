@@ -117,12 +117,11 @@ if ($page == "login") {
                     $page = '/KETENAGAKERJAAN/tenagakerja/import_detail';
                     break;
 
-                case 'tenagakerja_bpjs_kt':
-                    $page = '/KETENAGAKERJAAN/hak_normatif/bpjs_kt/index';
-                    break;
-
-                case 'tenagakerja_upah':
+                case 'ketenagakerjaan_upah':
                     $page = '/KETENAGAKERJAAN/hak_normatif/upah/index';
+                    break;
+                case 'ketenagakerjaan_bpjs_kt':
+                    $page = '/KETENAGAKERJAAN/hak_normatif/bpjs_kt/index';
                     break;
 
                 case 'kontrak_pks':

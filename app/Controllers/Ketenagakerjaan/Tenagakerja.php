@@ -5,12 +5,10 @@ namespace App\Controllers\Ketenagakerjaan;
 use App\Controllers\BaseController;
 
 use App\Database\DbHelper;
-use App\Database\DbHelperTenagakerja;
 use App\Database\DbHTableKetenagakerjaan;
 use App\Models\M_jabatan;
 use App\Models\M_tenagakerja;
 use App\Models\M_tenagakerja_detail;
-use App\Models\M_tenagakerja_temporary;
 
 class Tenagakerja extends BaseController
 {
@@ -47,7 +45,7 @@ class Tenagakerja extends BaseController
         }
 
         $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');
-        $appJS .=  loadJS('ketenagakerjaan/data_tenagakerja.js', "appjs");
+        $appJS .=  loadJS('ketenagakerjaan/tenagakerja_data.js', "appjs");
 
         $this->dtContent['title'] = "Data Tenaga Kerja";
         $this->dtContent['page'] = "ketenagakerjaan_data_tengakerja";
@@ -82,7 +80,7 @@ class Tenagakerja extends BaseController
 
         $this->dtContent['nip_tk'] = $nip_tk;
 
-        $appJS =  loadJS('ketenagakerjaan/info_detail.js', "appjs");
+        $appJS =  loadJS('ketenagakerjaan/tenagakerja_info.js', "appjs");
         $this->dtContent['appJSFoot'] = $appJS;
 
         return view($this->appName . '/v_app', $this->dtContent);
@@ -174,7 +172,7 @@ class Tenagakerja extends BaseController
         $this->dtContent['dtMitraKerja'] = $dtMitraKerja;
         $this->dtContent['dtWilayahKerja'] = $dtWilayahKerja;
 
-        $appJS =  loadJS('ketenagakerjaan/update_detail.js', "appjs");
+        $appJS =  loadJS('ketenagakerjaan/tenagakerja_update.js', "appjs");
         $this->dtContent['appJSFoot'] = $appJS;
 
         return view($this->appName . '/v_app', $this->dtContent);
@@ -388,89 +386,5 @@ class Tenagakerja extends BaseController
             $status = array('status' => 'failed');
         }
         echo json_encode($status);
-    }
-
-    public function ajax_get_data_tenagakerja()
-    {
-        $mitrakerja_id = $this->request->getVar('data_id');
-        $mitrakerja_id = 1;
-        $dbHForTable = new DbHTableKetenagakerjaan();
-
-        $dtTenagakerja = $dbHForTable->getForTabelTenagakerja($mitrakerja_id);
-
-        $data = array();
-        $no = $_POST['start'];
-
-        foreach ($dtTenagakerja as $tenagakerja) {
-
-            $no++;
-            $row = array();
-            $row[] = $no;
-            $row[] = $this->action($tenagakerja->id, $tenagakerja->nip, $tenagakerja->nama);
-            $row[] = $tenagakerja->status;
-            $row[] = $tenagakerja->nip;
-            $row[] = $tenagakerja->nama;
-            $row[] = $tenagakerja->jabatan;
-            $row[] = $tenagakerja->unitkerja;
-            $row[] = $tenagakerja->penempatan;
-            $row[] = $tenagakerja->wilayahkerja;
-
-            $row[] = $tenagakerja->no_pks_p1;
-            $row[] = $tenagakerja->no_pkwt;
-            $row[] = $tenagakerja->tanggal_awal;
-            $row[] = $tenagakerja->tanggal_akhir;
-
-            $row[] = $tenagakerja->no_identitas;
-            $row[] = $tenagakerja->tempat_lahir;
-            $row[] = $tenagakerja->tanggal_lahir;
-            $row[] = $tenagakerja->jenis_kelamin;
-            $row[] = $tenagakerja->agama;
-            $row[] = $tenagakerja->alamat;
-            $row[] = $tenagakerja->telepon;
-            $row[] = $tenagakerja->pendidikan;
-            $row[] = $tenagakerja->program_studi;
-
-            $row[] = $tenagakerja->bank_rek_payroll;
-            $row[] = $tenagakerja->no_rek_payroll;
-            $row[] = $tenagakerja->no_bpjs_kt;
-            $row[] = $tenagakerja->no_bpjs_ks;
-            $row[] = $tenagakerja->bank_rek_dplk;
-            $row[] = $tenagakerja->no_rek_dplk;
-
-
-            $row[] = $tenagakerja->no_npwp;
-            $row[] = $tenagakerja->no_kartu_keluarga;
-            $row[] = $tenagakerja->nama_ibu;
-            $row[] = $tenagakerja->nama_pasangan_hidup;
-            $row[] = $tenagakerja->nama_anak_1;
-            $row[] = $tenagakerja->nama_anak_2;
-            $row[] = $tenagakerja->nama_anak_3;
-
-            $row[] = $tenagakerja->no_skk_1;
-            $row[] = $tenagakerja->no_skk_2;
-
-            $row[] = $tenagakerja->keterangan;
-
-            $row[] = $this->action($tenagakerja->id, $tenagakerja->nip, $tenagakerja->nama);
-
-            $data[] = $row;
-        }
-
-        $output = array(
-            "draw"                 => $_POST['draw'],
-            "recordsTotal"         => $dbHForTable->count_all($mitrakerja_id),
-            "recordsFiltered"      => $dbHForTable->count_filtered($mitrakerja_id),
-            "data"                 => $data,
-        );
-
-        //output to json format
-        echo json_encode($output);
-    }
-
-    function action($tenagakerja_id, $tenagakerja_nip, $tenagakerja_nama)
-    {
-        //$action = "<div class='btn-group'> <button type='button' class='btn btn-success btn-sm' title='Edit' onclick='editData(\"$tenagakerja_nip\")'><i class='fa fa-edit'></i> Edit</button> <button type='button' class='btn btn-danger btn-sm' title='Hapus' onclick='deleteData($tenagakerja_id,\"$tenagakerja_nama\");'><i class=' fa fa-trash-alt'></i> Hapus</button> </div>";
-        $action = "<div class='btn-group'> <button type='button' class='btn btn-success btn-sm' title='Informasi Detail' onclick='info_detail(\"$tenagakerja_nip\")'><i class='fa fa-info'></i> <strong>Detail</strong></button></div>";
-        return $action;
     }
 }

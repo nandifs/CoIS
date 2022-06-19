@@ -86,6 +86,21 @@ function addZeroSpaces($text, $title = null, $length = 0)
     }
 }
 
+/**
+ * Convert string to array
+ *  
+ * @param string $text text after add zero
+ * @param string|null $delimiter for separate array 
+ * 
+ * @return mixed
+ */
+function stringToArray($text, $delimiter = ',')
+{
+    $text = strtr($text, array("\r\n" => "", "\r" => "", "\n" => "", " " => ""));
+    $text = explode($delimiter, $text);
+    return $text;
+}
+
 function createMenuItem($title, $menu_id, $icon)
 {
     echo "<li class='nav-item'>

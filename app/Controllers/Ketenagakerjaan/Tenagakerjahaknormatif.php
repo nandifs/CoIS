@@ -47,7 +47,7 @@ class Tenagakerjahaknormatif extends BaseController
         $appJS .=  loadJS('ketenagakerjaan/data_tenagakerja.js', "appjs");
 
         $this->dtContent['title'] = "Tenaga Kerja - Upah";
-        $this->dtContent['page'] = "tenagakerja_upah";
+        $this->dtContent['page'] = "ketenagakerjaan_upah";
 
         $this->dtContent['dtTenagakerja'] = $dtTenagakerja;
         $this->dtContent['dtMitraKerja'] = $dtMitraKerja;
