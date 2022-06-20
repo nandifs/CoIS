@@ -8,6 +8,7 @@ use App\Database\DbHelper;
 
 use App\Models\M_tenagakerja;
 use App\Models\M_tenagakerja_detail;
+use App\Models\M_tenagakerja_haknormatif;
 use App\Models\M_tenagakerja_temporary;
 
 class Importexport extends BaseController
@@ -15,6 +16,7 @@ class Importexport extends BaseController
     protected $dbHelper;
     protected $dbTenagakerja;
     protected $dbTenagakerjaDetail;
+    protected $dbTenagakerjaHaknormatif;
 
 
     public function __construct()
@@ -23,6 +25,7 @@ class Importexport extends BaseController
 
         $this->dbTenagakerja = new M_tenagakerja();
         $this->dbTenagakerjaDetail = new M_tenagakerja_detail();
+        $this->dbTenagakerjaHaknormatif = new M_tenagakerja_haknormatif();
     }
 
     public function import_tenagakerja()
@@ -227,6 +230,32 @@ class Importexport extends BaseController
                 $no_skk1 = trim($row[36]);
                 $no_skk2 = trim($row[37]);
 
+                //hak normatif
+                //Hilangkan tanda , (koma) jika ada dalam nilai rupiah
+                $upah_pokok = validasiNilaiRupiah(trim($row[38]));
+                $umk = validasiNilaiRupiah(trim($row[39]));
+
+                $tunj_masakerja = validasiNilaiRupiah(trim($row[40]));
+                $tunj_keahlian = validasiNilaiRupiah(trim($row[41]));
+                $tunj_transport = validasiNilaiRupiah(trim($row[42]));
+                $tunj_makan = validasiNilaiRupiah(trim($row[43]));
+                $tunj_lainnya = validasiNilaiRupiah(trim($row[44]));
+
+                $tunj_hariraya = validasiNilaiRupiah(trim($row[46]));
+
+                $premi_dplk = validasiNilaiRupiah(trim($row[47]));
+                $premi_bpjs_kt = validasiNilaiRupiah(trim($row[48]));
+                $premi_bpjs_ks = validasiNilaiRupiah(trim($row[49]));
+
+
+                $pot_bpjs_kt = validasiNilaiRupiah(trim($row[50]));
+                $pot_bpjs_ks = validasiNilaiRupiah(trim($row[51]));
+                $pot_seragam = validasiNilaiRupiah(trim($row[52]));
+                $pot_pajak = validasiNilaiRupiah(trim($row[53]));
+                $pot_adm = validasiNilaiRupiah(trim($row[54]));
+                $pot_sanksi = validasiNilaiRupiah(trim($row[55]));
+                $pot_lainnya = validasiNilaiRupiah(trim($row[56]));
+
                 //Validasi data import
                 if (is_null($kontrak_pks_id)) {
                     $validasi[] = "- Kontrak/SPK tidak ditemukan";
@@ -327,10 +356,33 @@ class Importexport extends BaseController
                     "no_skk_1" => $no_skk1,
                     "no_skk_2" => $no_skk2,
 
+                    "upah_pokok" => $upah_pokok,
+                    "umk"        => $umk,
+
+                    "tunj_masa_kerja" => $tunj_masakerja,
+                    "tunj_keahlian"   => $tunj_keahlian,
+                    "tunj_transport"  => $tunj_transport,
+                    "tunj_makan"      => $tunj_makan,
+                    "tunj_lainnya"    => $tunj_lainnya,
+
+                    "tunj_hari_raya"  => $tunj_hariraya,
+
+                    "premi_dplk"      => $premi_dplk,
+                    "premi_bpjs_kt"   => $premi_bpjs_kt,
+                    "premi_bpjs_ks"   => $premi_bpjs_ks,
+
+                    "pot_bpjs_kt"     => $pot_bpjs_kt,
+                    "pot_bpjs_ks"     => $pot_bpjs_ks,
+                    "pot_seragam"     => $pot_seragam,
+                    "pot_pajak"       => $pot_pajak,
+                    "pot_adm"         => $pot_adm,
+                    "pot_sanksi"      => $pot_sanksi,
+                    "pot_lainnya"     => $pot_lainnya,
+
                     "keterangan" => $keterangan,
 
                     "import_tanggal" => date('Y-m-d H:i:s'),
-                    "import_oleh" => $user_id
+                    "import_oleh"    => $user_id
                 ];
 
                 // Save data to batch
@@ -498,26 +550,52 @@ class Importexport extends BaseController
                 "no_skk_1" => $rowdata['no_skk_1'],
                 "no_skk_2" => $rowdata['no_skk_2'],
 
-                "keterangan" => $rowdata['keterangan'],
+                "keterangan" => $rowdata['keterangan']
             ];
 
-            if (strtoupper($status_import) == 'IMPORT DATA') {
-                if ($validasi == "Menunggu konfirmasi") {
+            $imp_data_haknormatif = [
+                "haknormatif_id" => $pegawai_id,
+                "upah_pokok" => $rowdata['upah_pokok'],
+                "umk" => $rowdata['umk'],
+                "tunj_masa_kerja" => $rowdata['tunj_masa_kerja'],
+                "tunj_keahlian" => $rowdata['tunj_keahlian'],
+                "tunj_transport" => $rowdata['tunj_transport'],
+                "tunj_makan" => $rowdata['tunj_makan'],
+                "tunj_lainnya" => $rowdata['tunj_lainnya'],
+                "tunj_hari_raya" => $rowdata['tunj_hari_raya'],
+
+                "premi_dplk" => $rowdata['premi_dplk'],
+                "premi_bpjs_kt" => $rowdata['premi_bpjs_kt'],
+                "premi_bpjs_ks" => $rowdata['premi_bpjs_ks'],
+
+                "pot_bpjs_kt" => $rowdata['pot_bpjs_kt'],
+                "pot_bpjs_ks" => $rowdata['pot_bpjs_ks'],
+                "pot_seragam" => $rowdata['pot_seragam'],
+                "pot_pajak" => $rowdata['pot_pajak'],
+                "pot_adm" => $rowdata['pot_adm'],
+                "pot_sanksi" => $rowdata['pot_sanksi'],
+                "pot_lainnya" => $rowdata['pot_lainnya']
+            ];
+
+            if ($validasi == "Menunggu konfirmasi") {
+                if (strtoupper($status_import) == 'IMPORT DATA') {
                     $batchImportDataDetail[] = $imp_data_detail;
-                }
-            } else if (strtoupper($status_import) == 'UPDATE DATA') {
-                if ($validasi == "Menunggu konfirmasi") {
+                    $batchImportDataNormatif[] = $imp_data_haknormatif;
+                } else if (strtoupper($status_import) == 'UPDATE DATA') {
                     $batchUpdateDataDetail[] = $imp_data_detail;
+                    $batchUpdateDataNormatif[] = $imp_data_haknormatif;
                 }
             }
         }
 
         if (count($batchImportDataDetail) != 0) {
             $simpan_detail = $this->dbTenagakerjaDetail->insertBatchDataFromXls($batchImportDataDetail);
+            $simpan_haknormatif = $this->dbTenagakerjaHaknormatif->insertBatchDataFromXls($batchImportDataNormatif);
         }
 
         if (count($batchUpdateDataDetail) != 0) {
             $simpan_update_detail = $this->dbTenagakerjaDetail->updateBatchDataFromXls($batchUpdateDataDetail);
+            $simpan_update_haknormatif = $this->dbTenagakerjaHaknormatif->updateBatchDataFromXls($batchUpdateDataNormatif);
         }
 
         //hapus data kontrak di tabel temporary jika sudah berhasil di import ke tabel utama

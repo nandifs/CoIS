@@ -16,16 +16,19 @@ function initTblTenagakerja() {
       url: url_link,
       type: "POST",
       data: function (d) {
-        d.data_id =  "tenagakerja|" +$("#dt-akses").val();
+        d.data_id = "upah|" + $("#dt-akses").val();
       },
     },
 
     //Set column definition initialisation properties.
     columnDefs: [
       {
-        targets: [0,1,-1], //first column / numbering column
+        targets: [0,1], //first column / numbering column
         orderable: false, //set not orderable
-      }      
+      },{
+        className: "text-right",
+        targets: [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
+      }
     ],
   });
 }

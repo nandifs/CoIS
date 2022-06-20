@@ -57,17 +57,41 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="tbl-tenagakerja" class="table table-bordered">
+                            <table id="tbl-tenagakerja" class="table table-bordered display nowrap">
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">NO</th>
+                                        <th style="text-align: center;">Aksi</th>
                                         <th>STATUS</th>
                                         <th>NIP</th>
                                         <th>NAMA</th>
                                         <th>JABATAN</th>
-                                        <th>UNIT KERJA</th>
-                                        <th>PENEMPATAN</th>
                                         <th>WILAYAH</th>
+
+                                        <th>UPAH POKOK</th>
+                                        <th>UMK</th>
+                                        <th>T.MASAKERJA</th>
+                                        <th>T.TRANSPORT</th>
+                                        <th>T.MAKAN</th>
+                                        <th>T.KEAHLIAN</th>
+                                        <th>T.HARIRAYA</th>
+                                        <th>T.LAINNYA</th>
+
+                                        <th>PRE.BPJS_KT</th>
+                                        <th>PRE.BPJS_KS</th>
+                                        <th>PRE.DPLK</th>
+
+                                        <th>POT.BPJS_KT</th>
+                                        <th>POT.BPJS_KS</th>
+                                        <th>POT.ADM</th>
+                                        <th>POT.SERAGAM</th>
+                                        <th>POT.SANKSI</th>
+                                        <th>POT.PAJAK</th>
+                                        <th>POT.LAINNYA</th>
+
+                                        <th>UPAH DITERIMA</th>
+
+                                        <th>KETERANGAN</th>
                                         <th style="text-align: center;">Aksi</th>
                                     </tr>
                                 </thead>

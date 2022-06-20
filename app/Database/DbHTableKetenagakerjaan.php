@@ -46,9 +46,8 @@ class DbHTableKetenagakerjaan
         $dbMitrakerja = new M_mitrakerja();
         $mitrakerja = $dbMitrakerja->getMitraKerja($mitrakerja_id);
 
-        $this->builder('stv__ketenagakerjaan_data_tk');
-        $this->builder->select('*')
-            ->orderBy('unitkerja, penempatan, tingkat_jabatan', 'asc');
+        $this->builder($this->table);
+        $this->builder->select('*');
 
         if ($mitrakerja['kelas'] == 1) {
             $kode_induk = substr($mitrakerja['kode'], 0, 3);
@@ -83,7 +82,7 @@ class DbHTableKetenagakerjaan
             $i++;
         }
 
-        if (isset($_POST['order'])) { // here order processing
+        if (isset($_POST['order'])) { // here order processing            
             $this->builder->orderBy($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else if (isset($this->order)) {
             $order = $this->order;
@@ -91,8 +90,10 @@ class DbHTableKetenagakerjaan
         }
     }
 
-    public function getForTabelTenagakerja($mitrakerja_id)
+    public function getForTabelTenagakerja($mitrakerja_id, $tableName, $selectedField)
     {
+        $this->table = $tableName;
+
         $this->_get_query($mitrakerja_id);
         if ($_POST['length'] != -1)
             $this->builder->limit($_POST['length'], $_POST['start']);

@@ -101,6 +101,58 @@ function stringToArray($text, $delimiter = ',')
     return $text;
 }
 
+/**
+ * Format coloum value for table
+ * 
+ *  
+ * @param string $colName text title of coloum with format saparator
+ * @param array $coldata row data
+ * @param references $realValue row data
+ * @return array
+ */
+function coloumFormat($colName, $colData)
+{
+    $colValue = array();
+    if (strpos($colName, "|")) {
+        $afrmt = explode("|", $colName);
+        if ($afrmt[0] == "c") {
+            $colfield = $afrmt[1];
+            $realValue = $colData->$colfield;
+            $colValue[] = number_format((float) $realValue, 2);
+            $colValue[] = $realValue;
+        } else {
+            $colValue[] = $colData->$colName;
+            $colValue[] = $colData->$colName;
+        }
+    } else {
+        $colValue[] = $colData->$colName;
+        $colValue[] = $colData->$colName;
+    }
+    return $colValue;
+}
+
+function validasiNilaiRupiah($svalue)
+{
+    $rvalue = 0;
+
+    $cdec = substr($svalue, -3, 1); //cek delimiter decimal
+    if ($cdec == '.' || $cdec == ',') {
+        if ($cdec == '.') {
+            $rvalue = str_replace(',', "", $svalue);
+        } else {
+            $rvalue = str_replace(',', '.', str_replace('.', "", $svalue));
+        }
+    } else {
+        $cribuan = substr($svalue, -4, 1); //cek delimiter ribuan
+        if ($cribuan == ',') {
+            $rvalue = str_replace(',', "", $svalue);
+        } else {
+            $rvalue = str_replace('.', "", $svalue);
+        }
+    }
+    return $rvalue;
+}
+
 function createMenuItem($title, $menu_id, $icon)
 {
     echo "<li class='nav-item'>
