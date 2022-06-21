@@ -24,7 +24,7 @@ class Tenagakerjafortable extends BaseController
 
         $dataId = $this->request->getVar('data_id');
 
-        //$dataId = "bpjs_kt|1"; //JANGAN LUPA HAPUS BARIS UJI COBA INI
+        $dataId = "bpjs_ks|1"; //JANGAN LUPA HAPUS BARIS UJI COBA INI
 
         $expDataId = explode('|', $dataId);
 
@@ -67,10 +67,7 @@ class Tenagakerjafortable extends BaseController
 
             $komponen = explode("|", $hakNormatifBPJSKT->komponen);
             $rumus =  json_decode($hakNormatifBPJSKT->rumus, true);
-            // d($komponen);
-            // dd($rumus);
 
-            //getValHNK($rumus["$nama_komponen"]) . " as " . $nama_komponen . ",";
             $vSelect = "status,nip,nama,jabatan,wilayahkerja,no_bpjs_kt,umk,";
             foreach ($komponen as $nama_komponen) {
                 $vSelect .= getValHNK($rumus["$nama_komponen"]) . " as " . $nama_komponen . ",";
@@ -90,6 +87,31 @@ class Tenagakerjafortable extends BaseController
             $vArrIurang = stringToArray($viuran);
             $vArrIurangTPerusahaan = stringToArray($viuranTPerusahaan);
             $vArrIurangTTengakerja = stringToArray($viuranTTengakerja);
+        } else if ($vdata == "bpjs_ks") {
+            $hakNormatifBPJSKS = $this->dbHelper->getHakNormatifKomponen("BPJS_KS_DETAIL");
+
+            $komponen = explode("|", $hakNormatifBPJSKS->komponen);
+            $rumus =  json_decode($hakNormatifBPJSKS->rumus, true);
+            // d($komponen);
+            // dd($rumus);
+
+            //getValHNK($rumus["$nama_komponen"]) . " as " . $nama_komponen . ",";
+            $vSelect = "status,nip,nama,jabatan,wilayahkerja,no_bpjs_ks,umk,";
+            foreach ($komponen as $nama_komponen) {
+                $vSelect .= getValHNK($rumus["$nama_komponen"]) . " as " . $nama_komponen . ",";
+            }
+
+            $vSelect .= "umk as iuran,keterangan";
+
+            $vOrderCols = "status,nip,nama,jabatan,wilayahkerja,no_bpjs_ks,c|umk,c|bpjs_ks_pk,c|bpjs_ks_tk,c|iuran,keterangan";
+            $vColoum = stringToArray($vOrderCols);
+            $vSelect = strtolower(stringClean($vSelect));
+
+            $vOrderCols = str_replace("|c", "", stringClean($vOrderCols));
+
+            $dtTenagakerja = $dbHForTable->getForTabelTenagakerja($mitrakerja_id, "stv__ketenagakerjaan_data_haknormatif", $vSelect, $vOrderCols);
+            $viuran = "bpjs_ks_pk,bpjs_ks_tk";
+            $vArrIurang = stringToArray($viuran);
         }
 
         $no = $_POST['start'];
@@ -134,20 +156,24 @@ class Tenagakerjafortable extends BaseController
                 $row[] = $tenagakerja->keterangan;
             }
 
-            if ($vdata == "bpjs_kt") {
+            if ($vdata == "bpjs_kt" || $vdata == "bpjs_ks") {
                 foreach ($vArrIurang as $nmfield) {
                     $iuran += $tenagakerja->$nmfield;
                 }
-                foreach ($vArrIurangTPerusahaan as $nmfield) {
-                    $iuran_t_perusahaan += $tenagakerja->$nmfield;
-                }
-                foreach ($vArrIurangTTengakerja as $nmfield) {
-                    $iuran_t_tenagakerja += $tenagakerja->$nmfield;
-                }
+                if ($vdata == "bpjs_kt") {
+                    foreach ($vArrIurangTPerusahaan as $nmfield) {
+                        $iuran_t_perusahaan += $tenagakerja->$nmfield;
+                    }
+                    foreach ($vArrIurangTTengakerja as $nmfield) {
+                        $iuran_t_tenagakerja += $tenagakerja->$nmfield;
+                    }
 
-                $row[15] = number_format($iuran, 2);
-                $row[16] = number_format($iuran_t_perusahaan, 2);
-                $row[17] = number_format($iuran_t_tenagakerja, 2);
+                    $row[15] = number_format($iuran, 2);
+                    $row[16] = number_format($iuran_t_perusahaan, 2);
+                    $row[17] = number_format($iuran_t_tenagakerja, 2);
+                } else if ($vdata == "bpjs_ks") {
+                    $row[11] = number_format($iuran, 2);
+                }
             }
             $row[] = $this->action($tenagakerja->id, $tenagakerja->nip, $tenagakerja->nama);
 

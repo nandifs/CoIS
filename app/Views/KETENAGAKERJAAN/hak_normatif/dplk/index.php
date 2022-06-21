@@ -7,8 +7,8 @@
                         <div class="card-body pb-0">
                             <?= form_open('/tenagakerja_add', ['class' => 'form-horizontal']); ?>
                             <div class="form-group row">
-                                <label for="input1" class="col-sm-2 col-form-label">Data Mitra Kerja</label>
-                                <div class="col-sm-5">
+                                <label for="input1" class="col-sm-2 col-form-label">Unit/Area</label>
+                                <div class="col-sm-6">
                                     <select class="form-control select2" id="dt-akses" name='dtakses'>
                                         <?php foreach ($dtMitraKerja as $mitra) {
                                             $space = "";
@@ -27,14 +27,23 @@
                                         }  ?>
                                     </select>
                                 </div>
-                                <div class="col-sm-5 d-none">
-                                    <div class="panel panel-default float-right">
-                                        <div class="panel-body">
-                                            <button type="button" class="btn btn-warning <?= ($dcUser["oid"] != 1) ? "d-none" : ""; ?>" data-toggle="modal" data-target="#modal-import">
-                                                <i class="fa fa-file-export"></i> Export Data Tenagakerja
-                                            </button>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="input1" class="col-sm-2 col-form-label">No SPK</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control select2" name='no_spk'>
+                                        <option value=1>0028.PJ/DAN.0102/C35000000/2021</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="input1" class="col-sm-2 col-form-label">Jenis Pekerjaan</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control select2" name='no_spk'>
+                                        <option value=1>SEMUA</option>
+                                        <option value=1>SATUAN PENGAMANAN</option>
+                                        <option value=1>OPHARDUNG</option>
+                                    </select>
                                 </div>
                             </div>
                             <?= form_close(); ?>
@@ -44,22 +53,28 @@
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">DAFTAR TENAGA KERJA</h3>
+                            <h3 class="card-title">DAFTAR DPLK TENAGA KERJA</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="tbl-tenagakerja" class="table table-bordered">
+                            <table id="tbl-tenagakerja" class="table table-bordered display nowrap">
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">NO</th>
+                                        <th class="text-center">Aksi</th>
                                         <th>STATUS</th>
                                         <th>NIP</th>
                                         <th>NAMA</th>
                                         <th>JABATAN</th>
-                                        <th>UNIT KERJA</th>
-                                        <th>PENEMPATAN</th>
                                         <th>WILAYAH</th>
-                                        <th style="text-align: center;">Aksi</th>
+
+                                        <th>NOMOR PESERTA</th>
+                                        <th>UPAH/UMK</th>
+                                        <th class="text-center">Iuran DPLK</th>
+                                        <th>TOTAL IURAN</th>
+
+                                        <th>KETERANGAN</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -72,7 +87,5 @@
             </div>
         </div>
         <!-- /.container-fluid -->
-
-        <?php include "modal_import.php"; ?>
     </section>
     <!-- /.content -->

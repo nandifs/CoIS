@@ -72,7 +72,6 @@
                                         <th rowspan="2">UPAH/UMK</th>
                                         <th colspan="2" class="text-center">Iuran BPJS KESEHATAN</th>
                                         <th rowspan="2">TOTAL IURAN</th>
-                                        <th colspan="2" class="text-center">Ditanggung</th>
 
                                         <th rowspan="2">KETERANGAN</th>
                                         <th rowspan="2" style="text-align: center;">Aksi</th>
@@ -80,8 +79,6 @@
                                     <tr>
                                         <th>Perusahaan</th>
                                         <th>Tenaga Kerja</th>
-                                        <th>Perusahaan</th>
-                                        <th>Tenagakerja</th>
                                     </tr>
                                 </thead>
                                 <tbody>
