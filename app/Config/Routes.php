@@ -101,6 +101,9 @@ $routes->get('/ketenagakerjaan_bpjs_kt', 'Ketenagakerjaan\Tenagakerjahaknormatif
 $routes->get('/ketenagakerjaan_bpjs_ks', 'Ketenagakerjaan\Tenagakerjahaknormatif::bpjs_ks');
 $routes->get('/ketenagakerjaan_dplk', 'Ketenagakerjaan\Tenagakerjahaknormatif::dplk');
 
+//Mutasi & Rotasi
+$routes->get('/ketenagakerjaan_mutasi', 'Ketenagakerjaan\Tenagakerjamutasi::mutasi');
+
 $routes->post('/ajax_gettabledataketenagakerjaan', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
 //$routes->get('/ajax_gettabledataketenagakerjaan', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
 

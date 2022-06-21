@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="card card-outline card-primary mt-2">
                         <div class="card-header">
-                            <h3 class="card-title">Mutasi & Rotasi Tenaga Kerja</h3>
+                            <h3 class="card-title">MUTASI & ROTASI TENAGA KERJA</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
@@ -20,13 +20,13 @@
                                     <div class="form-group row">
                                         <label for="input1" class="col-sm-3 col-form-label">NIP</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="nip" placeholder="No Induk Tenaga Kerja" value="<?= $nip; ?>" required readonly>
+                                            <input type="text" class="form-control" name="nip" placeholder="No Induk Tenaga Kerja" value="<?= $nip; ?>" autofocus required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="input1" class="col-sm-3 col-form-label">Nama Tenaga kerja</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="nama" placeholder="Nama Tenaga kerja" autofocus required>
+                                            <input type="text" class="form-control" name="nama" placeholder="Nama Tenaga kerja" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row">

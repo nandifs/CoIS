@@ -130,6 +130,10 @@ if ($page == "login") {
                     $page = '/KETENAGAKERJAAN/hak_normatif/dplk/index';
                     break;
 
+                case 'ketenagakerjaan_mutasi':
+                    $page = '/KETENAGAKERJAAN/mutasi/mutasi_tenagakerja';
+                    break;
+
                 case 'kontrak_pks':
                     $page = "/$appName/backoffice/kontrak/index";
                     break;
