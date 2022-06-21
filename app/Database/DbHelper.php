@@ -421,6 +421,44 @@ class DbHelper
         return $builder->get()->getResultArray();
     }
 
+    public function getHakNormatifKomponen($haknormatif)
+    {
+        $builder = $this->builder('mkp__tenagakerja_haknormatif_komponen');
+        $builder->select('*')
+            ->where('haknormatif', $haknormatif);
+
+        return $builder->get()->getFirstRow();
+    }
+
+    //getValHNK = getValueHakNormatifKomponen
+    public function getValHNK($haknormatif)
+    {
+        //konfersi rumus hak normatif ke array
+        $vHN = str_replace(['(', ')'], "", $haknormatif);
+        $vHN = str_replace(['*', '/', '+', '-'], ",", $vHN);
+        $arrHN = explode(",", $vHN);
+
+        //cari dan ganti semua parameter di rumus dengan nilainya
+        $newHN = array();
+        $newSHK = $haknormatif;
+
+        $builder = $this->builder('mkp__tenagakerja_haknormatif_komponen');
+        foreach ($arrHN as $key) {
+            $komponen = $builder->select('komponen,rumus')
+                ->getWhere(['haknormatif' => $key])->getFirstRow();
+            if (is_null($komponen)) {
+                $value = $key;
+            } else {
+                $gkomp = json_decode($komponen->rumus, true);
+                $value = $gkomp[$komponen->komponen];
+            }
+
+            //kembalikan menjadi string dengan rumus yang telah diganti nilainya
+            $newSHK = str_replace("$key", $value, $newSHK);
+        }
+        return $newSHK;
+    }
+
     /**
      * --------------------------------------------------------------------
      * HELPER FOR TABEL TEMPORARY
@@ -748,7 +786,6 @@ class DbHelper
      */
     public function getDataByQuery($tabelName, $kolomName, $filter = null)
     {
-
         $tabelName = str_replace(";", "", $tabelName);
         $kolomName = str_replace(";", "", $kolomName);
         $filter = str_replace(";", "", $filter);

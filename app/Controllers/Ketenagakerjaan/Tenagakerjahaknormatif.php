@@ -46,7 +46,7 @@ class Tenagakerjahaknormatif extends BaseController
         $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');
         $appJS .=  loadJS('ketenagakerjaan/tenagakerja_upah.js', "appjs");
 
-        $this->dtContent['title'] = "Tenaga Kerja - Upah";
+        $this->dtContent['title'] = "Ketenagakerjaan - Upah";
         $this->dtContent['page'] = "ketenagakerjaan_upah";
 
         $this->dtContent['dtTenagakerja'] = $dtTenagakerja;
@@ -84,10 +84,10 @@ class Tenagakerjahaknormatif extends BaseController
         }
 
         $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');
-        $appJS .=  loadJS('ketenagakerjaan/data_tenagakerja.js', "appjs");
+        $appJS .=  loadJS('ketenagakerjaan/tenagakerja_bpjs_kt.js', "appjs");
 
-        $this->dtContent['title'] = "Tenaga Kerja - BPJS Ketenagakerjaan";
-        $this->dtContent['page'] = "tenagakerja_bpjs_kt";
+        $this->dtContent['title'] = "Ketenagakerjaan - BPJS Ketenagakerjaan";
+        $this->dtContent['page'] = "ketenagakerjaan_bpjs_kt";
 
         $this->dtContent['dtTenagakerja'] = $dtTenagakerja;
         $this->dtContent['dtMitraKerja'] = $dtMitraKerja;

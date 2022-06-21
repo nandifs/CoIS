@@ -3,7 +3,7 @@
 var tblTenagakerja;
 
 function initTblTenagakerja() {
-  let url_link = "ajax_getdatatenagakerja";
+  let url_link = "ajax_gettabledataketenagakerjaan";
 
   tblTenagakerja = $("#tbl-tenagakerja").DataTable({    
     scrollX: true,

@@ -87,6 +87,20 @@ function addZeroSpaces($text, $title = null, $length = 0)
 }
 
 /**
+ * Cleaning text from line break
+ *  
+ * @param string $text text after add zero
+ * 
+ * @return mixed
+ */
+function stringClean($text)
+{
+    $text = strtr($text, array("\r\n" => "", "\r" => "", "\n" => ""));
+    //$text = strtr($text, array("\r\n" => "", "\r" => "", "\n" => "", " " => ""));
+    return $text;
+}
+
+/**
  * Convert string to array
  *  
  * @param string $text text after add zero
@@ -96,7 +110,7 @@ function addZeroSpaces($text, $title = null, $length = 0)
  */
 function stringToArray($text, $delimiter = ',')
 {
-    $text = strtr($text, array("\r\n" => "", "\r" => "", "\n" => "", " " => ""));
+    $text = stringClean($text);
     $text = explode($delimiter, $text);
     return $text;
 }

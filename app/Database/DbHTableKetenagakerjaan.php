@@ -22,24 +22,15 @@ class DbHTableKetenagakerjaan
 	*/
 
     //set column field database for datatable orderable
-    private $column_order = array(
-        null,
-        'nip', 'nama',
-        'jabatan', 'unitkerja',
-        'penempatan', 'wilayahkerja',
-        'status'
-    );
+    private $column_order = array();
 
     //set column field database for datatable searchable 
-    private $column_search = array(
-        'nip', 'nama',
-        'jabatan', 'unitkerja',
-        'penempatan', 'wilayahkerja',
-        'status'
-    );
+    private $column_search = array();
 
     // default order 
     private $order = array('unitkerja' => 'asc');
+
+    private $selField = "";
 
     private function tabel_tenagakerja($mitrakerja_id)
     {
@@ -47,7 +38,7 @@ class DbHTableKetenagakerjaan
         $mitrakerja = $dbMitrakerja->getMitraKerja($mitrakerja_id);
 
         $this->builder($this->table);
-        $this->builder->select('*');
+        $this->builder->select("$this->selField");
 
         if ($mitrakerja['kelas'] == 1) {
             $kode_induk = substr($mitrakerja['kode'], 0, 3);
@@ -90,9 +81,17 @@ class DbHTableKetenagakerjaan
         }
     }
 
-    public function getForTabelTenagakerja($mitrakerja_id, $tableName, $selectedField)
+    public function getForTabelTenagakerja($mitrakerja_id, $tableName, $selectedField, $tableCols)
     {
         $this->table = $tableName;
+        $this->selField = "id," . $selectedField;
+
+        $temp1 = array(null,);
+        $temp2 = explode(",", $tableCols);
+        $temp3 = array_merge($temp1, $temp2);
+
+        $this->column_order = $temp3;
+        $this->column_search = $temp2;
 
         $this->_get_query($mitrakerja_id);
         if ($_POST['length'] != -1)

@@ -16,7 +16,7 @@ function initTblTenagakerja() {
       url: url_link,
       type: "POST",
       data: function (d) {
-        d.data_id = "upah|" + $("#dt-akses").val();
+        d.data_id = "bpjs_kt|" + $("#dt-akses").val();
       },
     },
 
@@ -26,8 +26,11 @@ function initTblTenagakerja() {
         targets: [0,1], //first column / numbering column
         orderable: false, //set not orderable
       },{
+        className: "text-center",
+        targets: [1,2,7],
+      },{
         className: "text-right",
-        targets: [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
+        targets: [8,9,10,11,12,13,14,15,16,17],
       }
     ],
   });

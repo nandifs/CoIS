@@ -95,8 +95,8 @@ $routes->get('/ketenagakerjaan_import_tenagakerja', 'Ketenagakerjaan\Importexpor
 $routes->post('/ketenagakerjaan_validasi_import_tenagakerja_xls', 'Ketenagakerjaan\Importexport::validasi_data_import_tk_xlsx');
 $routes->post('/ketenagakerjaan_proses_import_tenagakerja_xls', 'Ketenagakerjaan\Importexport::proses_data_import_tk_xlsx');
 
-$routes->post('/ajax_getdatatenagakerja', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
-
+$routes->post('/ajax_gettabledataketenagakerjaan', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
+//$routes->get('/ajax_gettabledataketenagakerjaan', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
 //Hak Normatif
 $routes->get('/ketenagakerjaan_upah', 'Ketenagakerjaan\Tenagakerjahaknormatif::upah');
 $routes->get('/ketenagakerjaan_bpjs_kt', 'Ketenagakerjaan\Tenagakerjahaknormatif::bpjs_kt');
