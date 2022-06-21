@@ -24,7 +24,7 @@ class Tenagakerjafortable extends BaseController
 
         $dataId = $this->request->getVar('data_id');
 
-        $dataId = "bpjs_ks|1"; //JANGAN LUPA HAPUS BARIS UJI COBA INI
+        //$dataId = "dplk|1"; //JANGAN LUPA HAPUS BARIS UJI COBA INI
 
         $expDataId = explode('|', $dataId);
 
@@ -112,6 +112,31 @@ class Tenagakerjafortable extends BaseController
             $dtTenagakerja = $dbHForTable->getForTabelTenagakerja($mitrakerja_id, "stv__ketenagakerjaan_data_haknormatif", $vSelect, $vOrderCols);
             $viuran = "bpjs_ks_pk,bpjs_ks_tk";
             $vArrIurang = stringToArray($viuran);
+        } else if ($vdata == "dplk") {
+            $hakNormatifDPLK = $this->dbHelper->getHakNormatifKomponen("DPLK+");
+
+            $komponen = explode("|", $hakNormatifDPLK->komponen);
+            $rumus =  json_decode($hakNormatifDPLK->rumus, true);
+            // d($komponen);
+            // dd($rumus);
+
+            //getValHNK($rumus["$nama_komponen"]) . " as " . $nama_komponen . ",";
+            $vSelect = "status,nip,nama,jabatan,wilayahkerja,bank_rek_dplk,no_rek_dplk,umk,";
+            foreach ($komponen as $nama_komponen) {
+                $vSelect .= getValHNK($rumus["$nama_komponen"]) . " as " . $nama_komponen . ",";
+            }
+
+            $vSelect .= "umk as iuran,keterangan";
+
+            $vOrderCols = "status,nip,nama,jabatan,wilayahkerja,bank_rek_dplk,no_rek_dplk,c|umk,c|upah,c|uang_pesangon,c|uang_penghargaan_masa_kerja,c|uang_penggantian_hak,c|iuran,keterangan";
+            $vColoum = stringToArray($vOrderCols);
+            $vSelect = strtolower(stringClean($vSelect));
+
+            $vOrderCols = str_replace("|c", "", stringClean($vOrderCols));
+
+            $dtTenagakerja = $dbHForTable->getForTabelTenagakerja($mitrakerja_id, "stv__ketenagakerjaan_data_haknormatif", $vSelect, $vOrderCols);
+            $viuran = "uang_pesangon,uang_penghargaan_masa_kerja,uang_penggantian_hak";
+            $vArrIurang = stringToArray($viuran);
         }
 
         $no = $_POST['start'];
@@ -156,7 +181,7 @@ class Tenagakerjafortable extends BaseController
                 $row[] = $tenagakerja->keterangan;
             }
 
-            if ($vdata == "bpjs_kt" || $vdata == "bpjs_ks") {
+            if ($vdata == "bpjs_kt" || $vdata == "bpjs_ks" || $vdata == "dplk") {
                 foreach ($vArrIurang as $nmfield) {
                     $iuran += $tenagakerja->$nmfield;
                 }
@@ -173,6 +198,8 @@ class Tenagakerjafortable extends BaseController
                     $row[17] = number_format($iuran_t_tenagakerja, 2);
                 } else if ($vdata == "bpjs_ks") {
                     $row[11] = number_format($iuran, 2);
+                } else if ($vdata == "dplk") {
+                    $row[12] = number_format($iuran, 2);
                 }
             }
             $row[] = $this->action($tenagakerja->id, $tenagakerja->nip, $tenagakerja->nama);

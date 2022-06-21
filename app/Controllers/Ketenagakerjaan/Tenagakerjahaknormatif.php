@@ -106,4 +106,33 @@ class Tenagakerjahaknormatif extends BaseController
 
         return view($this->appName . '/v_app', $this->dtContent);
     }
+
+    public function dplk()
+    {
+        //Cek otoritas user
+        if ($this->oto_id != "99" && $this->oto_id != "1" && $this->oto_id != "2") {
+            return redirect()->to("/");
+        }
+
+        $selDtAkses = $this->dtAksesMitra;
+        $selComboDtAkses = $this->request->getVar("dtakses");
+
+        $dtMitraKerja = $this->dbHelper->getMitraKerja($selDtAkses);
+
+        if (is_null($selComboDtAkses)) {
+            $selComboDtAkses = $dtMitraKerja[0]['id'];
+        }
+
+        $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');
+        $appJS .=  loadJS('ketenagakerjaan/tenagakerja_dplk.js', "appjs");
+
+        $this->dtContent['title'] = "Ketenagakerjaan - DPLK/DANA UANG PENGAAKHIRAN";
+        $this->dtContent['page'] = "ketenagakerjaan_dplk";
+
+        $this->dtContent['dtMitraKerja'] = $dtMitraKerja;
+        $this->dtContent['selMitraKerja'] = $selDtAkses;
+        $this->dtContent['appJSFoot'] = $appJS;
+
+        return view($this->appName . '/v_app', $this->dtContent);
+    }
 }

@@ -126,6 +126,9 @@ if ($page == "login") {
                 case 'ketenagakerjaan_bpjs_ks':
                     $page = '/KETENAGAKERJAAN/hak_normatif/bpjs_ks/index';
                     break;
+                case 'ketenagakerjaan_dplk':
+                    $page = '/KETENAGAKERJAAN/hak_normatif/dplk/index';
+                    break;
 
                 case 'kontrak_pks':
                     $page = "/$appName/backoffice/kontrak/index";

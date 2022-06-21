@@ -53,33 +53,32 @@
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">DAFTAR DPLK TENAGA KERJA</h3>
+                            <h3 class="card-title">DAFTAR BPJS KETENAGAKERJAAN</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table id="tbl-tenagakerja" class="table table-bordered display nowrap">
                                 <thead>
                                     <tr>
-                                        <th style="width: 30px;">NO</th>
-                                        <th class="text-center">Aksi</th>
-                                        <th>STATUS</th>
-                                        <th>NIP</th>
-                                        <th>NAMA</th>
-                                        <th>JABATAN</th>
-                                        <th>WILAYAH</th>
+                                        <th rowspan="2" style="width: 30px;">NO</th>
+                                        <th rowspan="2" style="text-align: center;">Aksi</th>
+                                        <th rowspan="2">STATUS</th>
+                                        <th rowspan="2">NIP</th>
+                                        <th rowspan="2">NAMA</th>
+                                        <th rowspan="2">JABATAN</th>
+                                        <th rowspan="2">WILAYAH</th>
 
-                                        <th>BANK DPLK</th>
-                                        <th>NO. REK DPLK</th>
+                                        <th rowspan="2">NOMOR PESERTA</th>
+                                        <th rowspan="2">UPAH/UMK</th>
+                                        <th colspan="2" class="text-center">Iuran BPJS KESEHATAN</th>
+                                        <th rowspan="2">TOTAL IURAN</th>
 
-                                        <th class="text-center">UMK</th>
-                                        <th class="text-center">UPAH</th>
-                                        <th class="text-center">P. PESANGON</th>
-                                        <th class="text-center">P. MASA KERJA</th>
-                                        <th class="text-center">P. HAK</th>
-                                        <th>TOTAL IURAN</th>
-
-                                        <th>KETERANGAN</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th rowspan="2">KETERANGAN</th>
+                                        <th rowspan="2" style="text-align: center;">Aksi</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Perusahaan</th>
+                                        <th>Tenaga Kerja</th>
                                     </tr>
                                 </thead>
                                 <tbody>

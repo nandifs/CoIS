@@ -99,6 +99,7 @@ $routes->post('/ketenagakerjaan_proses_import_tenagakerja_xls', 'Ketenagakerjaan
 $routes->get('/ketenagakerjaan_upah', 'Ketenagakerjaan\Tenagakerjahaknormatif::upah');
 $routes->get('/ketenagakerjaan_bpjs_kt', 'Ketenagakerjaan\Tenagakerjahaknormatif::bpjs_kt');
 $routes->get('/ketenagakerjaan_bpjs_ks', 'Ketenagakerjaan\Tenagakerjahaknormatif::bpjs_ks');
+$routes->get('/ketenagakerjaan_dplk', 'Ketenagakerjaan\Tenagakerjahaknormatif::dplk');
 
 $routes->post('/ajax_gettabledataketenagakerjaan', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
 //$routes->get('/ajax_gettabledataketenagakerjaan', 'Ketenagakerjaan\Tenagakerjafortable::ajax_get_data_tenagakerja');
