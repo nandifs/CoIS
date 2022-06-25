@@ -82,12 +82,13 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="width: 30px;">No.</th>
-                                                        <th>Jabatan</th>
+                                                        <th>Wilayah</th>
                                                         <th>Unitkerja</th>
                                                         <th>Penempatan</th>
+                                                        <th>Jabatan</th>
+                                                        <th>Jenis</th>
                                                         <th>Sifat</th>
-                                                        <th>Tanggal Awal</th>
-                                                        <th>Tanggal Akhir</th>
+                                                        <th>Tanggal Berlaku</th>
                                                         <th style="text-align: center;">Aksi</th>
                                                     </tr>
                                                 </thead>

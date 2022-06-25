@@ -5,6 +5,8 @@
 <script src="<?= path_alte(); ?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="<?= path_alte(); ?>/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- date-range-picker -->
+<script src="<?= path_alte(); ?>/plugins/daterangepicker/daterangepicker.js"></script>
 
 <!-- DataTables  & Plugins -->
 <script src="<?= path_alte(); ?>/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -39,6 +41,7 @@
 <script src="<?= path_alte(); ?>/plugins/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.min.js"></script>
 
 <!-- App JS-->
+<?= (isset($appJSFootBefore)) ? $appJSFootBefore : '' ?>
 <script src="<?= base_url(); ?>/apps/js/utils.js?v=1.0"></script>
 <script src="<?= base_url(); ?>/apps/js/app.js?v=1.0"></script>
 <?= (isset($appJSFoot)) ? $appJSFoot : '' ?>

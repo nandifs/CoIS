@@ -5,6 +5,7 @@
 <script src="<?= path_alte(); ?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="<?= path_alte(); ?>/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
 <!-- AdminLTE App -->
 <script src="<?= path_alte(); ?>/dist/js/adminlte.js"></script>
 
@@ -23,6 +24,7 @@
 <script src="<?= path_alte(); ?>/plugins/toastr/toastr.min.js"></script>
 
 <!-- App JS-->
+<?= (isset($appJSFootBefore)) ? $appJSFootBefore : '' ?>
 <script src="<?= base_url(); ?>/apps/js/utils.js"></script>
 <script src="<?= base_url(); ?>/apps/js/app.js"></script>
 <?= (isset($appJSFoot)) ? $appJSFoot : '' ?>

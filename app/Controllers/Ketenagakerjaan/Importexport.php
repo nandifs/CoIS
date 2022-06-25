@@ -71,13 +71,13 @@ class Importexport extends BaseController
 
         $row_number = 0;
 
-        //validasi file excel yang akan di import
-        $validation = \Config\Services::validation();
+        //validasi file excel yang akan di import        
         $file = $this->request->getFile('imp_file');
         $datafile = array('imp_file' => $file);
 
         $redirectPath = '/ketenagakerjaan_import_tenagakerja';
 
+        $validation = \Config\Services::validation();
         if ($validation->run($datafile, 'import_excel') == FALSE) {
             session()->setFlashdata('errors', $validation->getErrors());
             return redirect()->to($redirectPath);

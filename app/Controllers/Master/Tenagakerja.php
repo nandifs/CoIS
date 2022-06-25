@@ -42,10 +42,10 @@ class Tenagakerja extends BaseController
         //get tenagakerja by selected mitrakerja
         if ($this->session->has('smk')) {
             $selMitrakerja = $this->session->smk;
-            $dtTenagakerja = $this->dbHelper->getTenagakerjaPenempatan($this->appID, $selMitrakerja);
+            $dtTenagakerja = $this->dbHelper->getTenagakerjaByPenempatan($this->appID, $selMitrakerja);
         } else {
             $selMitrakerja = "";
-            $dtTenagakerja = $this->dbHelper->getTenagakerjaPenempatan($this->appID, $this->dtAksesMitra);
+            $dtTenagakerja = $this->dbHelper->getTenagakerjaByPenempatan($this->appID, $this->dtAksesMitra);
         }
 
         $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');

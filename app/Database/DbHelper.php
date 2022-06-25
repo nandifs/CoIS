@@ -293,6 +293,24 @@ class DbHelper
      * HELPER FOR DATA TENAGAKERJA
      * --------------------------------------------------------------------
      */
+    public function getTenagakerjaIdByNIP($key)
+    {
+        $builder = $this->builder('mkp__tenagakerja');
+        return $builder->select('id')->getWhere(['nip' => $key])->getFirstRow();
+    }
+
+    public function getTenagakerjaByNIP($nip)
+    {
+        $builder = $this->builder('mkp__tenagakerja a');
+        $builder->select('a.*, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan, e.wilayah as wilayahkerja')
+            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
+            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
+            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
+            ->join('org__wilayahkerja e', 'a.wilayah_id=e.id', 'left')
+            ->where("a.nip", $nip);
+
+        return $builder->get()->getFirstRow('array'); //Jangan kirim resultnya. Supaya bisa digunakan sebagai object atau array.
+    }
 
     public function getTenagakerjaDetail()
     {
@@ -311,7 +329,7 @@ class DbHelper
         return $dt_tenagakerja;
     }
 
-    public function getTenagakerjaPenempatan($appId, $mitrakerja_id = null)
+    public function getTenagakerjaByPenempatan($appId, $mitrakerja_id = null)
     {
         $builder = $this->builder('mkp__tenagakerja a');
         $builder->select('a.*, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan')
@@ -324,22 +342,8 @@ class DbHelper
             $builder->where("a.penempatan_id", $mitrakerja_id);
         }
 
-        $builder->where("a.apps_id", $appId);
-
-        return $builder->get()->getResultArray();
-    }
-
-    public function getTenagakerjaDetailPenempatan($mitrakerja_id = null)
-    {
-        $builder = $this->builder('mkp__tenagakerja a');
-        $builder->select('a.*, b.singkatan as jabatan, c.singkatan as unitkerja, d.singkatan as penempatan')
-            ->join('mkp__jabatan b', 'a.jabatan_id=b.id', 'left')
-            ->join('org__unitkerja c', 'a.unitkerja_id=c.id', 'left')
-            ->join('org__mitrakerja d', 'a.penempatan_id=d.id', 'left')
-            ->orderBy('c.singkatan, d.singkatan, b.tingkat', 'asc');
-
-        if (!is_null($mitrakerja_id) && $mitrakerja_id != 0) {
-            $builder->where("a.penempatan_id", $mitrakerja_id);
+        if ($appId != "all") {
+            $builder->where("a.apps_id", $appId);
         }
 
         return $builder->get()->getResultArray();
@@ -366,12 +370,6 @@ class DbHelper
         $retData = $builder->get()->getRow()->jml;
 
         return $retData;
-    }
-
-    public function getTenagakerjaIdByNIP($key)
-    {
-        $builder = $this->builder('mkp__tenagakerja');
-        return $builder->select('id')->getWhere(['nip' => $key])->getFirstRow();
     }
 
     //KETENAGAKERJAAN
@@ -428,35 +426,6 @@ class DbHelper
             ->where('haknormatif', $haknormatif);
 
         return $builder->get()->getFirstRow();
-    }
-
-    //getValHNK = getValueHakNormatifKomponen
-    public function getValHNK($haknormatif)
-    {
-        //konfersi rumus hak normatif ke array
-        $vHN = str_replace(['(', ')'], "", $haknormatif);
-        $vHN = str_replace(['*', '/', '+', '-'], ",", $vHN);
-        $arrHN = explode(",", $vHN);
-
-        //cari dan ganti semua parameter di rumus dengan nilainya
-        $newHN = array();
-        $newSHK = $haknormatif;
-
-        $builder = $this->builder('mkp__tenagakerja_haknormatif_komponen');
-        foreach ($arrHN as $key) {
-            $komponen = $builder->select('komponen,rumus')
-                ->getWhere(['haknormatif' => $key])->getFirstRow();
-            if (is_null($komponen)) {
-                $value = $key;
-            } else {
-                $gkomp = json_decode($komponen->rumus, true);
-                $value = $gkomp[$komponen->komponen];
-            }
-
-            //kembalikan menjadi string dengan rumus yang telah diganti nilainya
-            $newSHK = str_replace("$key", $value, $newSHK);
-        }
-        return $newSHK;
     }
 
     /**

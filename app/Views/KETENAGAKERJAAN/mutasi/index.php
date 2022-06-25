@@ -60,26 +60,15 @@
                             <table id="tbl-tenagakerja" class="table table-bordered display nowrap">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="width: 30px;">NO</th>
-                                        <th rowspan="2" style="text-align: center;">Aksi</th>
-                                        <th rowspan="2">STATUS</th>
-                                        <th rowspan="2">NIP</th>
-                                        <th rowspan="2">NAMA</th>
-                                        <th rowspan="2">JABATAN</th>
-                                        <th rowspan="2">WILAYAH</th>
-
-                                        <th rowspan="2">NOMOR PESERTA</th>
-                                        <th rowspan="2">UPAH/UMK</th>
-                                        <th colspan="2" class="text-center">Iuran BPJS KESEHATAN</th>
-                                        <th rowspan="2">TOTAL IURAN</th>
-
-                                        <th rowspan="2">KETERANGAN</th>
-                                        <th rowspan="2" style="text-align: center;">Aksi</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Perusahaan</th>
-                                        <th>Tenaga Kerja</th>
-                                    </tr>
+                                        <th style="width: 30px;">No.</th>
+                                        <th>Wilayah</th>
+                                        <th>Unitkerja</th>
+                                        <th>Penempatan</th>
+                                        <th>Jabatan</th>
+                                        <th>Jenis</th>
+                                        <th>Sifat</th>
+                                        <th>Tanggal Berlaku</th>
+                                        <th style="text-align: center;">Aksi</th>
                                 </thead>
                                 <tbody>
 

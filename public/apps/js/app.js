@@ -1,6 +1,6 @@
 'use strict';
 
-$(function () {    
+$(function () {   
     //Initialize Table Elements
     if (isObjExist("def-table-1")){
         $("#def-table-1").DataTable({

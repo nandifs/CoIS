@@ -40,6 +40,17 @@ class Validation
     //--------------------------------------------------------------------
     // Rules
     //--------------------------------------------------------------------
+    public $import_berkas = [
+        'file_berkas' => 'ext_in[file_berkas,pdf,jpg,png]|max_size[file_berkas,1000]',
+    ];
+
+    public $import_berkas_errors = [
+        'file_berkas' => [
+            'ext_in'    => 'File Berkas hanya boleh diisi dengan file pdf, jpg atau png.',
+            'max_size'  => 'File Excel maksimal 1mb'
+        ]
+    ];
+
     public $import_excel = [
         'imp_file' => 'uploaded[imp_file]|ext_in[imp_file,xls,xlsx]|max_size[imp_file,1000]',
     ];

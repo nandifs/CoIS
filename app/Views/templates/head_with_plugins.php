@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="<?= path_alte(); ?>/dist/css/adminlte.min.css">
 
     <!-- Apps CSS -->
-    <link rel="stylesheet" href="<?= base_url(); ?>/apps/css/style.css">
     <?= (isset($appCSS)) ?  $appCSS : '' ?>
+    <link rel="stylesheet" href="<?= base_url(); ?>/apps/css/style.css">
 
     <!-- SweetAlert2 -->
     <script src="<?= path_alte(); ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
