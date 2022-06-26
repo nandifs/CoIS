@@ -428,6 +428,60 @@ class DbHelper
         return $builder->get()->getFirstRow();
     }
 
+    public function getDataMutasi($pegawai_id = null)
+    {
+        $builder = $this->builder('mkp__tenagakerja_mutasi a');
+        $builder->select('a.*, b.jabatan as jabatan_baru, c.singkatan as unitkerja_baru, d.singkatan as penempatan_baru, e.wilayah as wilayahkerja_baru, f.jenis_mutasi, g.sifat_mutasi')
+            ->join('mkp__jabatan b', 'a.jabatan_baru_id=b.id', 'left')
+            ->join('org__unitkerja c', 'a.unitkerja_baru_id=c.id', 'left')
+            ->join('org__mitrakerja d', 'a.penempatan_baru_id=d.id', 'left')
+            ->join('org__wilayahkerja e', 'a.wilayahkerja_baru_id=e.id', 'left')
+            ->join('mkp__mutasi_jenis f', 'a.jenis_id=f.id', 'left')
+            ->join('mkp__mutasi_sifat g', 'a.sifat_id=g.id', 'left');
+
+        if (!is_null($pegawai_id)) {
+            $builder->where('pegawai_id', $pegawai_id);
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getDataMutasiByMitrakerja($mitrakerja_id = null)
+    {
+        $builder = $this->builder('mkp__tenagakerja_mutasi a');
+        $builder->select('a.*, h.nip, h.nama as nama_pegawai, b.jabatan as jabatan_baru, c.singkatan as unitkerja_baru, d.singkatan as penempatan_baru, e.wilayah as wilayahkerja_baru, f.jenis_mutasi, g.sifat_mutasi')
+            ->join('mkp__tenagakerja h', 'a.pegawai_id=h.id', 'left')
+            ->join('mkp__jabatan b', 'a.jabatan_baru_id=b.id', 'left')
+            ->join('org__unitkerja c', 'a.unitkerja_baru_id=c.id', 'left')
+            ->join('org__mitrakerja d', 'a.penempatan_baru_id=d.id', 'left')
+            ->join('org__wilayahkerja e', 'a.wilayahkerja_baru_id=e.id', 'left')
+            ->join('mkp__mutasi_jenis f', 'a.jenis_id=f.id', 'left')
+            ->join('mkp__mutasi_sifat g', 'a.sifat_id=g.id', 'left');
+
+        if (!is_null($mitrakerja_id)) {
+            $builder->where('h.penempatan_id', $mitrakerja_id);
+        }
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getJenisMutasi($id = null)
+    {
+        $builder = $this->builder('mkp__mutasi_jenis');
+        if (!is_null($id)) {
+            $builder->where('id', $id);
+        }
+        return $builder->get()->getResultArray();
+    }
+    public function getSifatMutasi($id = null)
+    {
+        $builder = $this->builder('mkp__mutasi_sifat');
+        if (!is_null($id)) {
+            $builder->where('id', $id);
+        }
+        return $builder->get()->getResultArray();
+    }
+
     /**
      * --------------------------------------------------------------------
      * HELPER FOR TABEL TEMPORARY

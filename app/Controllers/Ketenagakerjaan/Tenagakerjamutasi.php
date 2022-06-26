@@ -38,13 +38,18 @@ class Tenagakerjamutasi extends BaseController
             $selComboDtAkses = $dtMitraKerja[0]['id'];
         }
 
+        $dtMutasiTK = $this->dbHelper->getDataMutasiByMitrakerja();
+
         $appJS =  loadJS('bs-custom-file-input/bs-custom-file-input.min.js', 'adminlte_plugins');
-        $appJS .=  loadJS('ketenagakerjaan/mutasi/tenagakerja_mutasi.js', "appjs");
+        $appJS .=  loadJS('ketenagakerjaan/mutasi/tenagakerja_mutasi_data.js', "appjs");
 
         $this->dtContent['title'] = "Data Mutasi Tenaga Kerja";
         $this->dtContent['page'] = "ketenagakerjaan_mutasi_data";
         $this->dtContent['dtMitraKerja'] = $dtMitraKerja;
         $this->dtContent['selMitraKerja'] = $selDtAkses;
+
+        $this->dtContent['dtMutasiTK'] = $dtMutasiTK;
+
         $this->dtContent['appJSFoot'] = $appJS;
 
         return view($this->appName . '/v_app', $this->dtContent);
@@ -65,6 +70,8 @@ class Tenagakerjamutasi extends BaseController
                 redirect()->to("/ketenagakerjaan_mutasi")->withInput();
             }
             unset($dtTenagakerja['kata_kunci']);
+            $pegawai_id = $dtTenagakerja['id'];
+            $dtMutasiTK = $this->dbHelper->getDataMutasi($pegawai_id);
         } else {
             $dtTenagakerja = "";
         }
@@ -81,6 +88,9 @@ class Tenagakerjamutasi extends BaseController
         } else {
             $dtJabatan = $this->dbJabatan->getJabatan($this->appID);
         }
+
+        $dtJenisMutasi = $this->dbHelper->getJenisMutasi();
+        $dtSifatMutasi = $this->dbHelper->getSifatMutasi();
 
         //plugins for datetimepicker in moment.js and tenpusdominus.js
         $appCSS =  loadCSS('tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css', 'adminlte_plugins');
@@ -99,6 +109,14 @@ class Tenagakerjamutasi extends BaseController
         $this->dtContent['dtUnitKerja'] = $dtUnitKerja;
         $this->dtContent['dtMitraKerja'] = $dtMitraKerja;
         $this->dtContent['dtWilayahKerja'] = $dtWilayahKerja;
+
+        $this->dtContent['dtJenisMutasi'] = $dtJenisMutasi;
+        $this->dtContent['dtSifatMutasi'] = $dtSifatMutasi;
+
+        if (isset($dtMutasiTK)) {
+            $this->dtContent['dtMutasiTK'] = $dtMutasiTK;
+        }
+
         $this->dtContent['appCSS'] = $appCSS;
         $this->dtContent['appJSFootBefore'] = $appJSBefore;
         $this->dtContent['appJSFoot'] = $appJSAfter;
@@ -120,7 +138,7 @@ class Tenagakerjamutasi extends BaseController
 
         $jabatan_baru_id = $this->request->getVar('jabatan_baru');
         $unitkerja_baru_id = $this->request->getVar('unitkerja_baru');
-        $penempatan_baru_id = $this->request->getVar('penenpatan_baru');
+        $penempatan_baru_id = $this->request->getVar('penempatan_baru');
         $wilayahkerja_baru_id = $this->request->getVar('wilkerja_baru');
 
         $jenis_mutasi = $this->request->getVar('jenis_mutasi');
@@ -140,29 +158,30 @@ class Tenagakerjamutasi extends BaseController
                 session()->setFlashdata('errors', $validation->getErrors());
                 return redirect()->to($redirectPath)->withInput();
             } else {
-                $file_berkas_name = "fl_mts_$pegawai_id" . date('YMdHis');
+                $file_berkas_ext = $file_berkas->getExtension();
+                $file_berkas_name = "fl_mts_$pegawai_id" . date('YMdHis') . "." . $file_berkas_ext;
                 $file_berkas->move('uploads/KETENAGAKERJAAN/doc_mutasi', $file_berkas_name);
             }
         }
 
         $data = [
-            'jenis_mutasi' => $jenis_mutasi,
-            'sifat_mutasi' => $sifat_mutasi,
+            'jenis_id' => $jenis_mutasi,
+            'sifat_id' => $sifat_mutasi,
 
             'pegawai_id' => $pegawai_id,
-            'jabatan_id' => $jabatan_id,
-            'unitkerja_id' => $unitkerja_id,
-            'penempatan_id' => $penempatan_id,
-            'wilayahkerja_id' => $wilayahkerja_id,
+            'jabatan_lama_id' => $jabatan_id,
+            'unitkerja_lama_id' => $unitkerja_id,
+            'penempatan_lama_id' => $penempatan_id,
+            'wilayahkerja_lama_id' => $wilayahkerja_id,
 
             'jabatan_baru_id' => $jabatan_baru_id,
             'unitkerja_baru_id' => $unitkerja_baru_id,
             'penempatan_baru_id' => $penempatan_baru_id,
             'wilayahkerja_baru_id' => $wilayahkerja_baru_id,
 
-            'ket_mutasi' => $ket_mutasi,
-            'tgl_berlaku' => $tgl_berlaku,
-            'file_berkas' => $file_berkas_name
+            'keterangan_mutasi' => $ket_mutasi,
+            'tanggal_berlaku' => $tgl_berlaku,
+            'berkas' => $file_berkas_name
         ];
 
         $simpan = $this->dbMutasiTK->save($data);

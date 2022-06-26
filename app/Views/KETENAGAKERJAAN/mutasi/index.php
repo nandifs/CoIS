@@ -57,21 +57,55 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="tbl-tenagakerja" class="table table-bordered display nowrap">
+                            <table id="tbl-mutasi-pegawai" class="table table-bordered display nowrap">
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">No.</th>
-                                        <th>Wilayah</th>
-                                        <th>Unitkerja</th>
-                                        <th>Penempatan</th>
-                                        <th>Jabatan</th>
+                                        <th>NIP</th>
+                                        <th>Nama Tenaga Kerja</th>
+                                        <th>Wilayah Baru</th>
+                                        <th>Unitkerja Baru</th>
+                                        <th>Penempatan Baru</th>
+                                        <th>Jabatan Baru</th>
                                         <th>Jenis</th>
                                         <th>Sifat</th>
                                         <th>Tanggal Berlaku</th>
+                                        <th>Berkas Pendukung</th>
                                         <th style="text-align: center;">Aksi</th>
                                 </thead>
                                 <tbody>
-
+                                    <?php
+                                    if (isset($dtMutasiTK)) {
+                                        $no = 1;
+                                        foreach ($dtMutasiTK as $row) {
+                                            $data_id = $row['id']; ?>
+                                            <tr>
+                                                <td><?= $no; ?></td>
+                                                <td><?= $row['nip']; ?></td>
+                                                <td><?= $row['nama_pegawai']; ?></td>
+                                                <td><?= $row['wilayahkerja_baru']; ?></td>
+                                                <td><?= $row['unitkerja_baru']; ?></td>
+                                                <td><?= $row['penempatan_baru']; ?></td>
+                                                <td><?= $row['jabatan_baru']; ?></td>
+                                                <td><?= $row['jenis_mutasi']; ?></td>
+                                                <td><?= $row['sifat_mutasi']; ?></td>
+                                                <td><?= $row['tanggal_berlaku']; ?></td>
+                                                <td><?= ($row['berkas'] == "") ? "&nbsp;&nbsp;&nbsp;-" : $row['berkas']; ?></td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-warning btn-sm" title="Edit" data-id="<?= $data_id; ?>" onclick="updateData(this);"><i class="fa fa-edit"></i> Edit</button>
+                                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" data-id="<?= $data_id; ?>" onclick="deleteData(this);"><i class=" fa fa-trash-alt"></i> Hapus</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                            $no++;
+                                        }
+                                    } else { ?>
+                                        <tr>
+                                            <td>1.</td>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>

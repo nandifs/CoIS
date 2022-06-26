@@ -5,20 +5,12 @@ var tblTenagakerja;
 function initTblTenagakerja() {
   $("#tbl-mutasi-pegawai").DataTable({
     responsive:true,
-    paging: true,
-    lengthChange: false,
-    searching: false,
-    ordering: true,
-    info: false,
+    paging: true,        
+    ordering: true,    
 });
 }
 
 function initObjPageTenagakerja() { 
-  //Date picker  
-  $('#tgl-berlaku').datetimepicker({
-    format: 'DD-MM-YYYY'
-  });
-
   $('.btn-update').click(function () {
     const upd_id = $(this).data('id');
     let nip = $('#nip').val();

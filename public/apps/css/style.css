@@ -28,7 +28,12 @@
 .th-nowarp{
   overflow: auto;
 }
+
 .th-nowarp>table>thead>tr>th{
+  white-space: nowrap;
+}
+
+.tr-nowarp{
   white-space: nowrap;
 }
 
